@@ -1,0 +1,27 @@
+	
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+
+
+	
+
+
+	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div id='map-canvas'></div>
+
+
+
+
+
+    <script src="{{ url_for('static', filename='map-style.json') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUtjsz5EVKSHBw8rJMFBeASAyZQKOkGA4&callback=initMap" async defer></script>
+
+	<script>
+		function initMap() { // Styles a map in night mode.
+		var map = new google.maps.Map(document.getElementById("map-canvas"), {
+			center: {lat: 40.674, lng: -73.945},
+			mapTypeControl: false,
+			zoom: 12,
+			styles: mapStyle
+        });
+      }
+    </script>
