@@ -1,70 +1,56 @@
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-        background: #000;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #description {
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-      }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
-      #infowindow-content .title {
-        font-weight: bold;
-      }
+.panel {
+  margin: 15px;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  font-family: 'Roboto Condensed', sans-serif;
+  max-height: 96%;
+}
 
-      #infowindow-content {
-        display: none;
-      }
+.panel-container {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-right: 12px;
+}
 
-      #map #infowindow-content {
-        display: inline;
-      }
+.title {
+  color: #fff;
+  background-color: #00B0FF;
+  font-size: 25px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
 
-      .pac-card {
-        margin: 15px;
-        border-radius: 2px 0 0 2px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        outline: none;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        background-color: #fff;
-        font-family: Roboto;
-      }
+.panel-item {
+  min-height: 100px;
+}
 
-      #pac-container {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        margin-right: 12px;
-      }
+#location-search {
+  background-color: #fff;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 400px;
+  min-height: 40px;
+}
 
-      #pac-input {
-        background-color: #fff;
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-        margin-left: 12px;
-        padding: 0 11px 0 13px;
-        text-overflow: ellipsis;
-        width: 400px;
-        min-height: 40px;
-      }
+#location-search:focus {
+  border-color: #00B0FF;
+}
 
-      #pac-input:focus {
-        border-color: #4d90fe;
-      }
-
-      #title {
-        color: #fff;
-        background-color: #4d90fe;
-        font-size: 25px;
-        font-weight: 500;
-        padding: 6px 12px;
-      }
+#map-canvas {
+  height: 100%;
+  background: #000;
+}

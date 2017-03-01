@@ -4,19 +4,35 @@
     <title></title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
   </head>
   <body>
 
-    <div id='map' data-bind="googleMaps:mapOptions"></div>
-    
+    <div class="panel" id="left-panel">
+      <div class="title">Search your city</div>
+      <div class="panel-container">
+        <input id="location-search" type="text" placeholder="Enter a location">
+      </div>
+      <div class="panel-container">
+        <div class="panel-item"></div>
+        <div class="panel-item"></div>
+        <div class="panel-item"></div>
+        <div class="panel-item"></div>
+        <div class="panel-item"></div>
+        <div class="panel-item"></div>
+        <div class="panel-item"></div>
+        <div class="panel-item"></div>
+      </div>
+    </div>
+    <div id="map-canvas"></div>
+
     <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=mapsLoaded" async defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
-
 
   </body>
 </html>
