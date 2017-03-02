@@ -4,52 +4,174 @@ html, body {
   padding: 0;
 }
 
-.panel {
-  margin: 15px;
-  border-radius: 2px 0 0 2px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  background-color: #fff;
-  font-family: 'Roboto Condensed', sans-serif;
-  max-height: 96%;
+img { width: 100%; }
+input, button, a { outline: 0; }
+
+/* Navigation Menu
+------------------------------------------------------------------------------*/
+.menu {
+  position: absolute;
+  height: 68px;
+  width: 100%;
+  z-index: 99999999 !important;
 }
 
-.panel-container {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  margin-right: 12px;
+.menu ul { display: none; }
+
+.nav-icon {
+  cursor: pointer;
+  z-index: 200;
+  height: 50px;
+  right: 15px;
+  top: 10px;
+  border: none;
+  background: none;
+  position: absolute;
+}
+
+.nav-icon .navLines {
+  display: block;
+  margin: 0rem 0rem;
+  width: 40px;
+  height: 4px;
+  background: white !important;
+  border-radius: 0px;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  position: relative;
+}
+
+.nav-icon .navLines:before, .nav-icon .navLines:after {
+  display: block;
+  margin: 0rem 0rem;
+  width: 40px;
+  height: 4px;
+  background: white !important;
+  border-radius: 0px;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  position: absolute;
+  left: 0;
+  content: '';
+  transform-origin: 3.57143px center;
+}
+
+.nav-icon .navLines:before {
+    top: 12.5px;
+}
+
+.nav-icon .navLines:after {
+    top: -12.5px;
+}
+
+.nav-icon.x .navLines {
+    background: transparent !important;
+}
+
+.nav-icon.x .navLines:before, .nav-icon.x .navLines:after {
+    transform-origin: 50% 50%;
+    top: 0;
+    width: 50px;
+    background: black;
+}
+
+.nav-icon.x .navLines:before {
+    transform: rotate3d(0, 0, 1, 45deg);
+}
+
+.nav-icon.x .navLines:after {
+    transform: rotate3d(0, 0, 1, -45deg);
+}
+
+/* Panel and recors
+------------------------------------------------------------------------------*/
+.panel {
+  width: 100%;
+  height: 100%;
+
+      /*TODO: use flex on view so on tablets we can split 40% / 60% */
+      max-width: 590px;
+  
+  display: flex;
+  flex-flow: column;
+  z-index: 9999999 !important;
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.panel.hide {
+  display: none;
 }
 
 .title {
-  color: #fff;
+  flex: 0 0 68px;
+  font-size: 0px;
   background-color: #00B0FF;
-  font-size: 25px;
-  font-weight: 500;
-  padding: 6px 12px;
 }
 
-.panel-item {
-  min-height: 100px;
+.panel-search {
+  display: flex;
+  flex: 0 0 40px;
+  padding-top: 12px;
+  padding-bottom: 14px;
 }
 
 #location-search {
+  width: 100%;
+  min-height: 40px;
+  margin-left: 12px;
+  margin-right: 12px;
   background-color: #fff;
-  font-family: 'Roboto Condensed', sans-serif;
   font-size: 15px;
   font-weight: 300;
-  margin-left: 12px;
+  font-family: 'Roboto Condensed', sans-serif;
   padding: 0 11px 0 13px;
   text-overflow: ellipsis;
-  width: 400px;
-  min-height: 40px;
 }
 
 #location-search:focus {
   border-color: #00B0FF;
 }
 
+.panel-items {
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.panel-item {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 5px 11px;
+  border-bottom: 1px #ccc solid;
+}
+
+.panel-item:last-child {
+  border-bottom: none;
+}
+
+.panel-item-image {
+  background: #ccc;
+}
+
+.panel-item-content {
+  flex: 1 1 63%;
+}
+
+@media only screen and (min-width: 365px) {
+  .panel-item-image {
+    flex: 1 1 35%;
+  }
+
+  .panel-item-content {
+    padding-left: 2%;
+  }
+}
+
+/* Map and InfoWindows
+------------------------------------------------------------------------------*/
 #map-canvas {
   height: 100%;
   background: #000;

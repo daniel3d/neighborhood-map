@@ -1,14 +1,16 @@
 var GoogleMapViewModel = function() {
 	var 
 		self = this,
-		LeftPanel = document.getElementById('left-panel'),
+		Menu = document.getElementById('menu'),
+		Panel = document.getElementById('panel'),
 		CanvasElement = document.getElementById('map-canvas'),
 		LocationSearchInput = document.getElementById('location-search'),
 		GoogleAnimation = window.google.maps.Animation,
 		GoogleMap = new window.google.maps.Map(CanvasElement, {
+			mapTypeControl: false,
+			fullscreenControl: false,
 			center: {lat: 51.507378, lng: -0.128171},
 			backgroundColor: 'none',
-			mapTypeControl: false,
 			zoom: 11
 		}),
 		LocationSearchBox = new google.maps.places.Autocomplete(LocationSearchInput, {
@@ -34,13 +36,23 @@ var GoogleMapViewModel = function() {
 			GoogleMap.fitBounds(location.geometry.viewport);
 		});
 
-		// Set position for the search input.
-		GoogleMap.controls[google.maps.ControlPosition.TOP_LEFT].push(LeftPanel);
-
 		// Load map style async...
 		$.getJSON('/static/map-style.json', function(data){ 
 			GoogleMap.setOptions({styles:data});
 		});
+
+		// Set Ui elements on the map.
+		GoogleMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(Menu);
+		GoogleMap.controls[google.maps.ControlPosition.TOP_LEFT].push(Panel);
+
+		// UI Mobile
+		//------------------------------------------------------------------------
+		self.panelVisible = ko.observable(true);
+		self.tooglePanel = function() {
+			self.panelVisible(self.panelVisible() ? false : true);
+			console.log(self.panelVisible());
+		}
+
 };
 
 function mapsLoaded() {
