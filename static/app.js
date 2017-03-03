@@ -1,12 +1,12 @@
 var GoogleMapViewModel = function() {
 	var 
 		self = this,
-		Menu = document.getElementById('menu'),
-		Panel = document.getElementById('panel'),
-		CanvasElement = document.getElementById('map-canvas'),
+		TopMenu = document.getElementById('top-menu'),
+		MapCanvas = document.getElementById('map-canvas'),
+		PanelLeft = document.getElementById('panel-left'),
 		LocationSearchInput = document.getElementById('location-search'),
 		GoogleAnimation = window.google.maps.Animation,
-		GoogleMap = new window.google.maps.Map(CanvasElement, {
+		GoogleMap = new window.google.maps.Map(MapCanvas, {
 			mapTypeControl: false,
 			fullscreenControl: false,
 			center: {lat: 51.507378, lng: -0.128171},
@@ -42,8 +42,8 @@ var GoogleMapViewModel = function() {
 		});
 
 		// Set Ui elements on the map.
-		GoogleMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(Menu);
-		GoogleMap.controls[google.maps.ControlPosition.TOP_LEFT].push(Panel);
+		GoogleMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(TopMenu);
+		GoogleMap.controls[google.maps.ControlPosition.TOP_LEFT].push(PanelLeft);
 
 		// UI Mobile
 		//------------------------------------------------------------------------

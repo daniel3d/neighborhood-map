@@ -11,20 +11,20 @@
   </head>
   <body>
 
-    <nav class="menu" id="menu">
+    <nav class="menu" id="top-menu">
       <ul></ul>
       <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
         <span class="navLines"></span>
       </button>  
     </nav>
-    
-    <div class="panel" id="panel" data-bind='css: {hide : !panelVisible() }'>
+
+    <div class="panel" id="panel-left" data-bind='css: {hide : !panelVisible() }'>
       <div class="title">Search your city or neighborhood</div>
       <div class="panel-search">
         <input id="location-search" type="text" placeholder="Enter a location">
       </div>
       <div class="panel-items">
-      {% for i in range(0,31) %}
+      {% for i in range(0,10) %}
         <div class="panel-item">
           <div class="panel-item-image"></div>
           <div class="panel-item-content">
@@ -35,6 +35,7 @@
       {% endfor %}
       </div>
     </div>
+
     <div id="map-canvas"></div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=mapsLoaded" async defer></script>

@@ -16,3 +16,17 @@
 
  
 
+TODO:
+Check following
+
+Info Window:
+https://google-developers.appspot.com/maps/documentation/javascript/examples/infowindow-simple
+
+Markers animation:
+https://google-developers.appspot.com/maps/documentation/javascript/examples/marker-animations-iteration
+
+Marker drag and animation:
+https://google-developers.appspot.com/maps/documentation/javascript/examples/marker-animations
+
+Map Loging:
+https://google-developers.appspot.com/maps/documentation/javascript/examples/save-simple
