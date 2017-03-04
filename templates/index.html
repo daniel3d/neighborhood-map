@@ -5,34 +5,36 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
   </head>
   <body>
 
-    <nav class="menu" id="top-menu">
-      <ul></ul>
-      <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
-        <span class="navLines"></span>
-      </button>  
-    </nav>
-
     <div class="panel" id="panel-left" data-bind='css: {hide : !panelVisible() }'>
-      <div class="title">Search your city or neighborhood</div>
+      <div class="title">
+        <button id="add-marker" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            <i class="material-icons">add</i> Add Marker
+        </button>
+        <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
+          <span class="navLines"></span>
+        </button>
+      </div>
       <div class="panel-search">
         <input id="location-search" type="text" placeholder="Enter a location">
       </div>
       <div class="panel-items">
-      {% for i in range(0,10) %}
+      {% for i in range(0,2) %}
         <div class="panel-item">
           <div class="panel-item-image"></div>
           <div class="panel-item-content">
-            <h3 class="item-title">
+            <h4 class="item-title">
               <img class="marker" src="https://mt.google.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-b.png">
               What is Lorem Ipsum?
-            </h3>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+            </h4>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
           </div>
         </div>
       {% endfor %}
@@ -41,10 +43,48 @@
 
     <div id="map-canvas"></div>
 
+    <dialog class="mdl-dialog">
+      <h4 class="mdl-dialog__title">Add marker</h4>
+      <div class="mdl-dialog__content">
+        <form action="#">
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" id="sample1">
+            <label class="mdl-textfield__label" for="sample1">Text...</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" id="sample1">
+            <label class="mdl-textfield__label" for="sample1">Text...</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield">
+            <textarea class="mdl-textfield__input" type="text" rows= "3" id="sample5" ></textarea>
+            <label class="mdl-textfield__label" for="sample5">Description...</label>
+          </div>
+        </form>
+      </div>
+      <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button">Save</button>
+        <button type="button" class="mdl-button close">Cancel</button>
+      </div>
+    </dialog>
+
+
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=mapsLoaded" async defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
-
+    <script>
+      var dialog = document.querySelector('dialog');
+      var showDialogButton = document.querySelector('#add-marker');
+      if (! dialog.showModal) {
+        dialogPolyfill.registerDialog(dialog);
+      }
+      showDialogButton.addEventListener('click', function() {
+        dialog.showModal();
+      });
+      dialog.querySelector('.close').addEventListener('click', function() {
+        dialog.close();
+      });
+    </script>
   </body>
 </html>
