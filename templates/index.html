@@ -15,7 +15,7 @@
 
     <div class="panel" id="panel-left" data-bind='css: {hide : !panelVisible() }'>
       <div class="title">
-        <button id="add-marker" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        <button id="add-marker-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
             <i class="material-icons">add</i> Add Marker
         </button>
         <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
@@ -43,8 +43,9 @@
 
     <div id="map-canvas"></div>
 
-    <dialog class="mdl-dialog">
+    <dialog class="mdl-dialog" id="add-marker">
       <h4 class="mdl-dialog__title">Add marker</h4>
+      <button class="nav-icon x close"><span class="navLines"></span></button>
       <div class="mdl-dialog__content">
         <form action="#">
           <div class="mdl-textfield mdl-js-textfield">
@@ -62,29 +63,16 @@
         </form>
       </div>
       <div class="mdl-dialog__actions">
-        <button type="button" class="mdl-button">Save</button>
+        <button type="button" class="mdl-button">Add</button>
         <button type="button" class="mdl-button close">Cancel</button>
       </div>
     </dialog>
 
-
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=mapsLoaded" async defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-    <script>
-      var dialog = document.querySelector('dialog');
-      var showDialogButton = document.querySelector('#add-marker');
-      if (! dialog.showModal) {
-        dialogPolyfill.registerDialog(dialog);
-      }
-      showDialogButton.addEventListener('click', function() {
-        dialog.showModal();
-      });
-      dialog.querySelector('.close').addEventListener('click', function() {
-        dialog.close();
-      });
-    </script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=googleMapsJsLoaded" async></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
+    <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+
   </body>
 </html>
