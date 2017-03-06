@@ -13,15 +13,36 @@
   </head>
   <body>
 
-    <div class="panel" id="panel-left" data-bind='css: {hide : !panelVisible() }'>
+    <div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible(), 'form': true}">
       <div class="title">
-        <button id="add-marker-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        <button id="add-marker-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" data-bind="click: addMarker">
             <i class="material-icons">add</i> Add Marker
         </button>
         <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
           <span class="navLines"></span>
         </button>
       </div>
+      
+      <div class="panel-form">
+        <form action="#">
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" id="sample1">
+            <label class="mdl-textfield__label" for="sample1">Text...</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" id="sample1">
+            <label class="mdl-textfield__label" for="sample1">Text...</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield">
+            <textarea class="mdl-textfield__input" type="text" rows= "3" id="sample5" ></textarea>
+            <label class="mdl-textfield__label" for="sample5">Description...</label>
+          </div>
+
+          <button type="button" class="mdl-button">Save</button>
+          <button type="button" class="mdl-button close">Cancel</button>
+        </form>  
+      </div>
+      
       <div class="panel-search">
         <input id="location-search" type="text" placeholder="Enter a location">
       </div>
@@ -42,31 +63,6 @@
     </div>
 
     <div id="map-canvas"></div>
-
-    <dialog class="mdl-dialog" id="add-marker">
-      <h4 class="mdl-dialog__title">Add marker</h4>
-      <button class="nav-icon x close"><span class="navLines"></span></button>
-      <div class="mdl-dialog__content">
-        <form action="#">
-          <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" id="sample1">
-            <label class="mdl-textfield__label" for="sample1">Text...</label>
-          </div>
-          <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" id="sample1">
-            <label class="mdl-textfield__label" for="sample1">Text...</label>
-          </div>
-          <div class="mdl-textfield mdl-js-textfield">
-            <textarea class="mdl-textfield__input" type="text" rows= "3" id="sample5" ></textarea>
-            <label class="mdl-textfield__label" for="sample5">Description...</label>
-          </div>
-        </form>
-      </div>
-      <div class="mdl-dialog__actions">
-        <button type="button" class="mdl-button">Add</button>
-        <button type="button" class="mdl-button close">Cancel</button>
-      </div>
-    </dialog>
 
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script defer src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=googleMapsJsLoaded" async></script>

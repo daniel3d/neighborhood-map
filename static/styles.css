@@ -99,7 +99,8 @@ input, button, a { outline: 0; }
   height: auto;
 }
 
-.panel.hide .panel-search, .panel.hide .panel-items {
+.panel.hide .panel-search, .panel.hidel .panel-items, .panel.hide .panel-form,
+.panel.form .panel-search, .panel.form .panel-items {
   display: none;
 }
 
@@ -108,6 +109,14 @@ input, button, a { outline: 0; }
   font-size: 0px;
   background-color: #c2185b;
   padding: 15px;
+}
+
+.panel-form {
+  padding: 15px;
+}
+
+.panel-form .mdl-button {
+  float: right;
 }
 
 .panel-search {
@@ -136,6 +145,10 @@ input, button, a { outline: 0; }
 
 #location-search:focus {
   border-color: #c2185b;
+}
+
+#add-marker-button {
+  float: left;
 }
 
 .panel-items {
@@ -179,17 +192,6 @@ input, button, a { outline: 0; }
   margin-right: 10px;
 }
 
-
-/* Add Dialog
-------------------------------------------------------------------------------*/
-.mdl-dialog {
-  width: 100%;
-  height: 100%;
-  top: 0px;
-  padding: 0px;
-  max-width: 640px;
-}
-
 .mdl-textfield {
   width: 100%;
 }
@@ -197,16 +199,6 @@ input, button, a { outline: 0; }
 .mdl-textfield__label:after {
   background-color: #c2185b;
 }
-
-.mdl-dialog .nav-icon {
-    top: 10px;
-    right: 15px;
-}
-
-.mdl-dialog .nav-icon .navLines:before, .mdl-dialog .nav-icon .navLines:after {
-  background: black !important;
-}
-
 
 /* Map and InfoWindows
 ------------------------------------------------------------------------------*/
@@ -245,24 +237,24 @@ input, button, a { outline: 0; }
     display: none;
   }
 
-  .panel.hide .panel-search, .panel.hide .panel-items {
+  #add-marker-button {
+    float: right;
+  }
+
+  .panel.hide .panel-search, .panel.hide .panel-items, .panel.hide.form .panel-form {
     display: flex;
+  }
+
+  .panel.form .panel-search, .panel.form .panel-items {
+    display: none;
   }
 
   .panel-item-image {
     flex: 0 0 0%;
   }
 
-  .mdl-dialog {
-    width: 49%;
-    height: auto;
-    top: initial;
-    padding: 20px;
-  }
-
-  .mdl-dialog .nav-icon {
-    top: 35px;
-    right: 40px;
+  .panel-form textarea {
+    height: 170px;
   }
 
 }
