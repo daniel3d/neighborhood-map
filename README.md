@@ -14,7 +14,11 @@
  * [sqlAlchemy](http://www.sqlalchemy.org/) The Python SQL Toolkit and Object Relational Mapper
  * [Rauth](https://rauth.readthedocs.io/en/latest/) A simple Python OAuth 1.0/a, OAuth 2.0
 
+### Credits
+ * [Designing a RESTful API with Python and Flask](https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask)
  
+
+
 
 TODO:
 Check following
