@@ -13,34 +13,11 @@
   </head>
   <body>
 
-    <div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible(), 'form': addMarker()}">
+    <div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible()}">
       <div class="title">
-        <button id="add-marker-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" data-bind="click: toogleAddMarker">
-            <i class="material-icons">add</i> Add Marker
-        </button>
         <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
           <span class="navLines"></span>
         </button>
-      </div>
-      
-      <div class="panel-form" data-bind="css:{'hide': !addMarker()}">
-        <form action="#">
-          <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" id="sample1">
-            <label class="mdl-textfield__label" for="sample1">Text...</label>
-          </div>
-          <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" id="sample1">
-            <label class="mdl-textfield__label" for="sample1">Text...</label>
-          </div>
-          <div class="mdl-textfield mdl-js-textfield">
-            <textarea class="mdl-textfield__input" type="text" rows= "3" id="sample5" ></textarea>
-            <label class="mdl-textfield__label" for="sample5">Description...</label>
-          </div>
-
-          <button type="button" class="mdl-button">Save</button>
-          <button type="button" class="mdl-button close">Cancel</button>
-        </form>  
       </div>
       
       <div class="panel-search">
@@ -64,7 +41,7 @@
     <div id="map-canvas"></div>
 
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=googleMapsJsLoaded" async></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places,geometry&callback=googleMapsJsLoaded" async></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
     <script defer src="{{ url_for('static', filename='app.js') }}"></script>

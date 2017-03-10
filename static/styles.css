@@ -99,12 +99,7 @@ input, button, a { outline: 0; }
   height: auto;
 }
 
-.panel-form.hide {
-  display: none;
-}
-
-.panel.hide .panel-search, .panel.hide .panel-items, .panel.hide .panel-form,
-.panel.form .panel-search, .panel.form .panel-items {
+.panel.hide .panel-search, .panel.hide .panel-items {
   display: none;
 }
 
@@ -113,14 +108,6 @@ input, button, a { outline: 0; }
   font-size: 0px;
   background-color: #c2185b;
   padding: 15px;
-}
-
-.panel-form {
-  padding: 15px;
-}
-
-.panel-form .mdl-button {
-  float: right;
 }
 
 .panel-search {
@@ -233,7 +220,7 @@ input, button, a { outline: 0; }
   
   .panel {
     width: 50%;
-    height: auto;
+    height: 93%;
     margin: 15px;
     border-radius: 2px;
   }
@@ -246,20 +233,12 @@ input, button, a { outline: 0; }
     float: right;
   }
 
-  .panel.hide .panel-search, .panel.hide .panel-items, .panel.hide.form .panel-form {
+  .panel.hide .panel-search, .panel.hide .panel-items {
     display: flex;
-  }
-
-  .panel.form .panel-search, .panel.form .panel-items {
-    display: none;
   }
 
   .panel-item-image {
     flex: 0 0 0%;
-  }
-
-  .panel-form textarea {
-    height: 170px;
   }
 
 }

@@ -61,20 +61,28 @@ function GoogleMap(initAddress) {
 
 	// Fire callback event when bonds get changed delay with 1000ms
 	self.onBondsChange = function(callback) {
-		google.maps.event.addListener(self.map,'bounds_changed', function(){
+		google.maps.event.addListener(self.map, 'bounds_changed', function(){
 			if(!mapBondsChanging) {
-				setTimeout(function(){
+				setTimeout(function() {
 					mapBondsChanging = false;
 					var bounds = self.map.getBounds();
-					var nw = bounds.getNorthEast()
-					var sw =  bounds.getSouthWest();
-					callback({
-						nw: [nw.lat(), nw.lng()],
-						sw: [sw.lat(), sw.lng()]
+					var center = self.map.getCenter();
+					var ne = bounds.getNorthEast();
+					callback({ 
+						radius: google.maps.geometry.spherical.computeDistanceBetween(center, ne),
+						center: center
 					});
 				}, 1000);
+				mapBondsChanging = true;
 			}
-			mapBondsChanging = true;
+		});
+	}
+
+	self.addMarker = function(marker) {
+		new google.maps.Marker({
+			position: marker.location,
+			title: marker.title,
+			map: self.map
 		});
 	}
 
@@ -93,11 +101,36 @@ var NeighborhoodMapViewModel = function() {
 
 	// Make sure we update the markers when bonds get changed.
 	googleMap.onBondsChange(function(bonds) {
-		$.getJSON('/api/markers?' + $.param(bonds), function(data){ 
+		// meters to km
+		var radius = bonds.radius/1000;
+		console.log(radius, bonds)
+		$.getJSON([
+		'https://api.flickr.com/services/rest/?method=flickr.photos.search',
+		'api_key=9ba0e6cdb83174a03fa1a7bef94a6a49',
+		'text=',
+		'has_geo=1',
+		'lat='+bonds.center.lat(),
+		'lon='+bonds.center.lng(),
+		'radius='+(radius > 35) ? 35 : radius,
+		'extras=tags,+geo',
+		'format=json',
+		'nojsoncallback=1'].join('&'), function(data){
+			var markers = [];
 			console.log(data);
-			//self.ListOfMarkers(data);
+			$.each(data.photos.photo, function(index, item){
+				var marker = {
+					image: 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_z.jpg',
+					title: item.title,
+					description: item.tags,
+					location: {lat: parseFloat(item.latitude), lng: parseFloat(item.longitude)}
+				}
+				markers.push(marker);
+				googleMap.addMarker(marker);
+			})
+			self.ListOfMarkers(markers);
 		});
 	});
+
 
 	// UI functionality --------------------------------------------------------
 	self.panelVisible = ko.observable(true);
