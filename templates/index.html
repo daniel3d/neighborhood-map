@@ -13,9 +13,9 @@
   </head>
   <body>
 
-    <div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible(), 'form': true}">
+    <div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible(), 'form': addMarker()}">
       <div class="title">
-        <button id="add-marker-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" data-bind="click: addMarker">
+        <button id="add-marker-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" data-bind="click: toogleAddMarker">
             <i class="material-icons">add</i> Add Marker
         </button>
         <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
@@ -23,7 +23,7 @@
         </button>
       </div>
       
-      <div class="panel-form">
+      <div class="panel-form" data-bind="css:{'hide': !addMarker()}">
         <form action="#">
           <div class="mdl-textfield mdl-js-textfield">
             <input class="mdl-textfield__input" type="text" id="sample1">
@@ -46,20 +46,19 @@
       <div class="panel-search">
         <input id="location-search" type="text" placeholder="Enter a location">
       </div>
-      <div class="panel-items">
-      {% for i in range(0,2) %}
+
+      <div class="panel-items" data-bind="foreach: ListOfMarkers">
+
         <div class="panel-item">
-          <div class="panel-item-image"></div>
+          <div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ image +')'}"></div>
           <div class="panel-item-content">
-            <h4 class="item-title">
-              <img class="marker" src="https://mt.google.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-b.png">
-              What is Lorem Ipsum?
-            </h4>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
+            <h4 class="item-title" data-bind="text: title"></h4>
+            <p data-bind="text: description"></p>
           </div>
         </div>
-      {% endfor %}
+
       </div>
+
     </div>
 
     <div id="map-canvas"></div>
