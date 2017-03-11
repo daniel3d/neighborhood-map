@@ -8,6 +8,7 @@ function GoogleMap(initAddress) {
 	$panelLeft = $('#panel-left'),
 	$searchInput = $('#location-search'),
 	mapBondsChanging = false,
+	minZoomLevel = 14,
 	geocoder = new google.maps.Geocoder,
 	infoWindow = new google.maps.InfoWindow,
 	searchBox = new google.maps.places.Autocomplete($searchInput[0], {
@@ -23,10 +24,15 @@ function GoogleMap(initAddress) {
 
 	// Create the map object.
 	self.map = new google.maps.Map($canvas[0], { 
-		zoom: 11,
+		zoom: minZoomLevel,
 		mapTypeControl: false, 
 		backgroundColor: 'none',
 		fullscreenControl: false
+	});
+
+	// Limit the zoom level
+	google.maps.event.addListener(self.map, 'zoom_changed', function () {
+		if (self.map.getZoom() < minZoomLevel) self.map.setZoom(minZoomLevel);
 	});
 
 	// Load map style async...
@@ -100,34 +106,38 @@ var NeighborhoodMapViewModel = function() {
 	self.ListOfMarkers = ko.observableArray([]);
 
 	// Make sure we update the markers when bonds get changed.
+	// bd29606b39e52ba6646834057c5a3da6
 	googleMap.onBondsChange(function(bonds) {
 		// meters to km
 		var radius = bonds.radius/1000;
-		console.log(radius, bonds)
-		$.getJSON([
-		'https://api.flickr.com/services/rest/?method=flickr.photos.search',
-		'api_key=9ba0e6cdb83174a03fa1a7bef94a6a49',
-		'text=',
-		'has_geo=1',
-		'lat='+bonds.center.lat(),
-		'lon='+bonds.center.lng(),
-		'radius='+(radius > 35) ? 35 : radius,
-		'extras=tags,+geo',
-		'format=json',
-		'nojsoncallback=1'].join('&'), function(data){
-			var markers = [];
-			console.log(data);
-			$.each(data.photos.photo, function(index, item){
-				var marker = {
-					image: 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_z.jpg',
-					title: item.title,
-					description: item.tags,
-					location: {lat: parseFloat(item.latitude), lng: parseFloat(item.longitude)}
-				}
-				markers.push(marker);
-				googleMap.addMarker(marker);
-			})
-			self.ListOfMarkers(markers);
+		console.log(radius, bonds);
+
+		$.ajax({
+			beforeSend: function(request) {
+				request.setRequestHeader("user-key", 'bd29606b39e52ba6646834057c5a3da6');
+			},
+			dataType: "json",
+			url: ['https://developers.zomato.com/api/v2.1/geocode?',
+			'lat='+bonds.center.lat(),
+			'lon='+bonds.center.lng()
+			].join('&'),
+			success: function(data) {
+				var markers = [];
+				$.each(data.nearby_restaurants, function(index, item){
+					var marker = {
+						image: item.restaurant.thumb,
+						title: item.restaurant.name,
+						description: item.restaurant.cuisines,
+						location: {
+							lat: parseFloat(item.restaurant.location.latitude), 
+							lng: parseFloat(item.restaurant.location.longitude)
+						}
+					}
+					markers.push(marker);
+					googleMap.addMarker(marker);
+				})
+				self.ListOfMarkers(markers);
+			}
 		});
 	});
 
