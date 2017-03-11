@@ -8,7 +8,6 @@ function GoogleMap(initAddress) {
 	$panelLeft = $('#panel-left'),
 	$searchInput = $('#location-search'),
 	mapBondsChanging = false,
-	minZoomLevel = 14,
 	geocoder = new google.maps.Geocoder,
 	infoWindow = new google.maps.InfoWindow,
 	searchBox = new google.maps.places.Autocomplete($searchInput[0], {
@@ -24,15 +23,10 @@ function GoogleMap(initAddress) {
 
 	// Create the map object.
 	self.map = new google.maps.Map($canvas[0], { 
-		zoom: minZoomLevel,
+		zoom: 11,
 		mapTypeControl: false, 
 		backgroundColor: 'none',
 		fullscreenControl: false
-	});
-
-	// Limit the zoom level
-	google.maps.event.addListener(self.map, 'zoom_changed', function () {
-		if (self.map.getZoom() < minZoomLevel) self.map.setZoom(minZoomLevel);
 	});
 
 	// Load map style async...
@@ -72,12 +66,12 @@ function GoogleMap(initAddress) {
 				setTimeout(function() {
 					mapBondsChanging = false;
 					var bounds = self.map.getBounds();
-					var center = self.map.getCenter();
-					var ne = bounds.getNorthEast();
-					callback({ 
-						radius: google.maps.geometry.spherical.computeDistanceBetween(center, ne),
-						center: center
-					});
+					var nw = bounds.getNorthEast()
+					var sw =  bounds.getSouthWest();
+					callback([nw.lat(), nw.lng(),sw.lat(), sw.lng()].join('|'));
+					//callback({
+					//	nw: [nw.lat(), nw.lng()],
+					//	sw: [sw.lat(), sw.lng()]});
 				}, 1000);
 				mapBondsChanging = true;
 			}
@@ -106,39 +100,40 @@ var NeighborhoodMapViewModel = function() {
 	self.ListOfMarkers = ko.observableArray([]);
 
 	// Make sure we update the markers when bonds get changed.
-	// bd29606b39e52ba6646834057c5a3da6
 	googleMap.onBondsChange(function(bonds) {
-		// meters to km
-		var radius = bonds.radius/1000;
-		console.log(radius, bonds);
-
-		$.ajax({
-			beforeSend: function(request) {
-				request.setRequestHeader("user-key", 'bd29606b39e52ba6646834057c5a3da6');
-			},
-			dataType: "json",
-			url: ['https://developers.zomato.com/api/v2.1/geocode?',
-			'lat='+bonds.center.lat(),
-			'lon='+bonds.center.lng()
-			].join('&'),
-			success: function(data) {
+		$.getJSON(['https://en.wikipedia.org/w/api.php?',
+				'action=query',
+				'format=json',
+				'prop=coordinates|pageimages|pageterms',
+				'generator=geosearch',
+				'colimit=50',
+				'piprop=thumbnail',
+				'pithumbsize=144',
+				'pilimit=50',
+				'wbptterms=description',
+				'ggsbbox='+bonds,
+				'ggslimit=50',
+				'origin=*'
+			].join('&'), function(data) {
 				var markers = [];
-				$.each(data.nearby_restaurants, function(index, item){
-					var marker = {
-						image: item.restaurant.thumb,
-						title: item.restaurant.name,
-						description: item.restaurant.cuisines,
-						location: {
-							lat: parseFloat(item.restaurant.location.latitude), 
-							lng: parseFloat(item.restaurant.location.longitude)
+				console.log(data);
+				$.each(data.query.pages, function(index, item){
+					if(item.thumbnail && item.terms) {
+						var marker = {
+							image: item.thumbnail.source,
+							title: item.title,
+							description: item.terms.description[0],
+							location: {
+								lat: parseFloat(item.coordinates[0].lat), 
+								lng: parseFloat(item.coordinates[0].lon)
+							}
 						}
+						markers.push(marker);
+						googleMap.addMarker(marker);
 					}
-					markers.push(marker);
-					googleMap.addMarker(marker);
-				})
+				});
 				self.ListOfMarkers(markers);
-			}
-		});
+			});	
 	});
 
 
