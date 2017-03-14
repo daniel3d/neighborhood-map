@@ -5,6 +5,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
 
+    <link href="https://fonts.googleapis.com/css?family=Damion" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
@@ -15,6 +16,7 @@
 
     <div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible()}">
       <div class="title">
+        Neighborhood Map
         <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
           <span class="navLines"></span>
         </button>
@@ -27,10 +29,11 @@
       <div class="panel-items" data-bind="foreach: ListOfMarkers">
 
         <div class="panel-item">
-          <div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ image +')'}"></div>
+          <div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ restaurant.thumb +')'}"></div>
           <div class="panel-item-content">
-            <h4 class="item-title" data-bind="text: title"></h4>
-            <p data-bind="text: description"></p>
+            <h4 class="item-title" data-bind="text: restaurant.name"></h4>
+            <p data-bind="text: restaurant.cuisines"></p>
+            <small data-bind="text: restaurant.location.locality_verbose"></small>
           </div>
         </div>
 
@@ -41,7 +44,7 @@
     <div id="map-canvas"></div>
 
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places,geometry&callback=googleMapsJsLoaded" async></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUtjsz5EVKSHBw8rJMFBeASAyZQKOkGA4&libraries=places,geometry&callback=googleMapsJsLoaded" async></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
     <script defer src="{{ url_for('static', filename='app.js') }}"></script>

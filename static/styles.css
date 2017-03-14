@@ -105,9 +105,11 @@ input, button, a { outline: 0; }
 
 .title {
   flex: 0 0 35px;
-  font-size: 0px;
   background-color: #c2185b;
   padding: 15px;
+  font-family: 'Damion', cursive;
+  color: #fff;
+  font-size: 24px;
 }
 
 .panel-search {
