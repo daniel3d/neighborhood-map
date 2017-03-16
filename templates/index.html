@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
   </head>
@@ -26,14 +27,34 @@
         <input id="location-search" type="text" placeholder="Enter a location">
       </div>
 
-      <div class="panel-items" data-bind="foreach: ListOfMarkers">
-
+      <div class="panel-items" data-bind="foreach: restaurants">
         <div class="panel-item">
           <div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ restaurant.thumb +')'}"></div>
           <div class="panel-item-content">
             <h4 class="item-title" data-bind="text: restaurant.name"></h4>
-            <p data-bind="text: restaurant.cuisines"></p>
-            <small data-bind="text: restaurant.location.locality_verbose"></small>
+            <p class="item-desciption" data-bind="text: restaurant.cuisines"></p>
+            <div class="item-rating">
+              <span class="ratings" data-bind="css: {
+                  'one': restaurant.user_rating.aggregate_rating > 1.0,
+                  'onehalf': restaurant.user_rating.aggregate_rating > 1.4,
+                  'two': restaurant.user_rating.aggregate_rating > 1.9,
+                  'twohalf': restaurant.user_rating.aggregate_rating > 2.4,
+                  'three': restaurant.user_rating.aggregate_rating > 2.9,
+                  'threehalf': restaurant.user_rating.aggregate_rating > 3.4,
+                  'four': restaurant.user_rating.aggregate_rating > 3.9,
+                  'fourhalf': restaurant.user_rating.aggregate_rating > 4.4,
+                  'five': restaurant.user_rating.aggregate_rating > 4.9
+              }"></span>
+              <small>
+                <span data-bind="text: restaurant.user_rating.aggregate_rating"></span> /
+                <span data-bind="text: restaurant.user_rating.votes"></span>
+              </small>
+            </div>
+            <div class="item-location">
+              <small>
+                <span data-bind="text: restaurant.location.address"></span>
+              </small>
+            </div>
           </div>
         </div>
 

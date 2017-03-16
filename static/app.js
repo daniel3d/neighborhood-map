@@ -13,6 +13,7 @@ var NeighborhoodMapViewModel = function() {
 		backgroundColor: 'none',
 		fullscreenControl: false
 	}),
+	markers = [],
 	geocoder = new google.maps.Geocoder,
 	infoWindow = new google.maps.InfoWindow,
 	searchBox = new google.maps.places.Autocomplete($searchInput[0], {
@@ -31,29 +32,52 @@ var NeighborhoodMapViewModel = function() {
 		ne = bounds.getNorthEast();
 		return google.maps.geometry.spherical.computeDistanceBetween(sw, ne) / 4;
 	},
-	addMarker = function(item) {
-		new google.maps.Marker({
-			position: {
-				lat: parseFloat(item.restaurant.location.latitude), 
-				lng: parseFloat(item.restaurant.location.longitude)
-			},
-			title: item.restaurant.name,
-			map: map
+	clearMarkers = function() {
+		$.each(markers, function(index, marker){
+			marker.setMap(null);
 		});
+		markers = [];
+	},
+	dropMarkers = function() {
+		$.each(self.restaurants(), function(index, item){
+			addMarkerWithTimeout({
+				title: item.restaurant.name,
+				position: {
+					lat: parseFloat(item.restaurant.location.latitude), 
+					lng: parseFloat(item.restaurant.location.longitude)
+				},
+			}, index * 100);
+		});
+		// Add auto center...
+	},
+	addMarkerWithTimeout = function (marker, timeout) {
+		window.setTimeout(function() {
+			markers.push(new google.maps.Marker({
+				title: marker.name,
+				position: marker.position,
+				animation: google.maps.Animation.DROP,
+				map: map
+			}));
+		}, timeout);
 	};
 
+
+
 	// Set observables
-	self.ListOfMarkers = ko.observableArray([]);
+	self.restaurants = ko.observableArray([]);
 	self.panelVisible = ko.observable(true);
 
+	// Toogle panel visability
 	self.tooglePanel = function() {
 		self.panelVisible(self.panelVisible() ? false : true);
 	}
 
 	// Update curent location
 	var updateLocation = function(center, proximity) {
-		console.log(center.lat(), center.lng(), proximity);
-		$.ajax({ // Make Zoomato request based on the curent location center.
+		// First let clear the markers
+		clearMarkers();
+		// Make Zoomato request based on the curent location center.
+		$.ajax({ 
 			beforeSend: function(request) {
 				request.setRequestHeader("user-key", 'bd29606b39e52ba6646834057c5a3da6');
 			},
@@ -66,12 +90,8 @@ var NeighborhoodMapViewModel = function() {
 				'sort=rating'
 			].join('&'),
 			success: function(data) {
-				var markers = [];
-				$.each(data.restaurants, function(index, item){
-					addMarker(item);
-					markers.push(item);
-				})
-				self.ListOfMarkers(markers);
+				self.restaurants(data.restaurants);
+				dropMarkers();
 			}
 		});
 	}
@@ -132,19 +152,6 @@ var NeighborhoodMapViewModel = function() {
 			});
 		}
 	});
-
-
-
-
-
-
-
-	// Make sure we update the markers when bonds get changed.
-	// bd29606b39e52ba6646834057c5a3da6
-	//googleMap.addListener('LocationUpdated', function(test) {
-	//	console.log('lool', test);
-		/**/
-	//});
 
 }
 
