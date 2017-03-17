@@ -7,8 +7,8 @@ html, body {
 img { width: 100%; }
 input, button, a { outline: 0; }
 
-.material-icons {
-  margin-left: -5px;
+#templates {
+  display: none;
 }
 
 /* Navigation Menu

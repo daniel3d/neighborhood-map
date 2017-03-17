@@ -22,11 +22,9 @@
           <span class="navLines"></span>
         </button>
       </div>
-      
       <div class="panel-search">
         <input id="location-search" type="text" placeholder="Enter a location">
       </div>
-
       <div class="panel-items" data-bind="foreach: restaurants">
         <div class="panel-item">
           <div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ restaurant.thumb +')'}"></div>
@@ -57,12 +55,18 @@
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
 
     <div id="map-canvas"></div>
+
+    <span id="templates" hidden>
+      <div id="info-window" data-bind="if: curentRestaurant()" type="text/template">
+        <img data-bind="attr: { src: curentRestaurant().thumb }"/>
+        <h4 data-bind="text: curentRestaurant().name"></h4>
+        <p data-bind="text: curentRestaurant().cuisines"></p>
+      </div>
+    </span>
 
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUtjsz5EVKSHBw8rJMFBeASAyZQKOkGA4&libraries=places,geometry&callback=googleMapsJsLoaded" async></script>
