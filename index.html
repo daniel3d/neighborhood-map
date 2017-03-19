@@ -2,128 +2,125 @@
 <html>
 
 <head>
-    <title></title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <!-- Styles -->
-    <link href="https://fonts.googleapis.com/css?family=Damion" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <link rel="stylesheet" href="static/styles.css">
+	<title></title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<!-- Styles -->
+	<link href="https://fonts.googleapis.com/css?family=Damion" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+	<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+	<link rel="stylesheet" href="static/styles.css">
 </head>
 
 <body>
-    <!-- UI panel -->
-    <div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible()}">
-        <div class="title">
-            <i class="material-icons">restaurant</i> Restaurants
-            <button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
-                <span class="navLines"></span>
-            </button>
-        </div>
-        <!-- Search bar -->
-        <div class="panel-search">
-            <input id="location-search" type="text" placeholder="Enter a location" value="NY, United States">
-        </div>
-        <!-- Loading bar -->
-        <div data-bind="visible: status().loading" class="mdl-progress mdl-js-progress mdl-progress__indeterminate mdl-progress-pink"></div>
-        <!-- Status panel only visible when we have status message -->
-        <div class="panel-status" data-bind="visible: status().text != ''">
-            <i class="material-icons md-48" data-bind="text: status().icon"></i>
-            <p data-bind="text: status().text"></p>
-        </div>
-        <!-- List of resturants -->
-        <div class="panel-items" data-bind="foreach: restaurants">
-            <div class="panel-item" data-bind="click: $parent.openMarkerInfo, attr: { id: 'restaurant_' + restaurant.id }">
-                <div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ restaurant.thumb +')'}"></div>
-                <div class="panel-item-content">
-                    <h4 class="item-title" data-bind="text: restaurant.name"></h4>
-                    <p class="item-desciption" data-bind="text: restaurant.cuisines"></p>
-                    <div class="item-rating">
-                        <span class="ratings" data-bind="css: {
-                  'one': restaurant.user_rating.aggregate_rating > 1.0,
-                  'onehalf': restaurant.user_rating.aggregate_rating > 1.4,
-                  'two': restaurant.user_rating.aggregate_rating > 1.9,
-                  'twohalf': restaurant.user_rating.aggregate_rating > 2.4,
-                  'three': restaurant.user_rating.aggregate_rating > 2.9,
-                  'threehalf': restaurant.user_rating.aggregate_rating > 3.4,
-                  'four': restaurant.user_rating.aggregate_rating > 3.9,
-                  'fourhalf': restaurant.user_rating.aggregate_rating > 4.4,
-                  'five': restaurant.user_rating.aggregate_rating > 4.9
-              }"></span>
-                        <small>
-                <span data-bind="text: restaurant.user_rating.aggregate_rating"></span> /
-                <span data-bind="text: restaurant.user_rating.votes"></span>
-              </small>
-                    </div>
-                    <div class="item-location">
-                        <small>
-                <span data-bind="text: restaurant.location.address"></span>
-              </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Google map -->
-    <div id="map-canvas"></div>
-    <!-- Templates -->
-    <span id="templates" hidden>
-      <!-- Marker info window -->
-      <div id="info-window" data-bind="if: curentRestaurant()" type="text/template">
-        <div class="info-image" data-bind="style: {'backgroundImage': 'url('+ curentRestaurant().restaurant.thumb +')'}"></div>
-        <div class="info-title">
-          <p data-bind="text: curentRestaurant().restaurant.cuisines"></p>
-          <h5 data-bind="text: curentRestaurant().restaurant.name"></h5>
-          <div class="item-rating">
-            <span class="ratings" data-bind="css: {
-                'one': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.0,
-                'onehalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.4,
-                'two': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.9,
-                'twohalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 2.4,
-                'three': curentRestaurant().restaurant.user_rating.aggregate_rating > 2.9,
-                'threehalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 3.4,
-                'four': curentRestaurant().restaurant.user_rating.aggregate_rating > 3.9,
-                'fourhalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 4.4,
-                'five': curentRestaurant().restaurant.user_rating.aggregate_rating > 4.9
-            }">
-            </span>
-    <small>
-              <span data-bind="text: curentRestaurant().restaurant.user_rating.aggregate_rating"></span> /
-              <span data-bind="text: curentRestaurant().restaurant.user_rating.votes"></span>
-              <ul>
-                <li title="Street View">
-                  <a href="#" data-bind="click: openStreetView">
-                    <i class="material-icons">streetview</i></a>
-                </li>
-                <li title="Photo Galery">
-                  <a data-bind="attr: { href: curentRestaurant().restaurant.photos_url }" target="_blank">
-                    <i class="material-icons">photo</i></a>
-                </li>
-                <li title="Restaurant Menu">
-                  <a data-bind="attr: { href: curentRestaurant().restaurant.menu_url }" target="_blank">
-                    <i class="material-icons">map</i></a>
-                </li>
-              </ul>
-            </small>
-    </div>
-    </div>
-    <hr>
-    <p div class="info-content">
-        <b>Address: </b>
-        <span data-bind="text: curentRestaurant().restaurant.location.address"></span>
-        <br>
-        <b>Avarage cost for two: </b>
-        <span data-bind="text: curentRestaurant().restaurant.currency + '' + curentRestaurant().restaurant.average_cost_for_two"></span>
-    </p>
-    </div>
-    </span>
-    <!-- Scripts -->
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
-    <script defer src="static/app.js"></script>
+	<!-- UI panel -->
+	<div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible()}">
+		<div class="title">
+			<i class="material-icons">restaurant</i> Restaurants
+			<button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
+				<span class="navLines"></span>
+			</button>
+		</div>
+		<!-- Search bar -->
+		<div class="panel-search">
+			<input id="location-search" type="text" placeholder="Enter a location" value="NY, United States">
+		</div>
+		<!-- Loading bar -->
+		<div data-bind="visible: status().loading" class="mdl-progress mdl-js-progress mdl-progress__indeterminate mdl-progress-pink"></div>
+		<!-- Status panel only visible when we have status message -->
+		<div class="panel-status" data-bind="visible: status().text != ''">
+			<i class="material-icons md-48" data-bind="text: status().icon"></i>
+			<p data-bind="text: status().text"></p>
+		</div>
+		<!-- List of resturants -->
+		<div class="panel-items" data-bind="foreach: restaurants">
+			<div class="panel-item" data-bind="click: $parent.openMarkerInfo, attr: { id: 'restaurant_' + restaurant.id }">
+				<div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ restaurant.thumb +')'}"></div>
+				<div class="panel-item-content">
+					<h4 class="item-title" data-bind="text: restaurant.name"></h4>
+					<p class="item-desciption" data-bind="text: restaurant.cuisines"></p>
+					<div class="item-rating">
+						<span class="ratings" data-bind="css: {
+						'one': restaurant.user_rating.aggregate_rating > 1.0,
+						'onehalf': restaurant.user_rating.aggregate_rating > 1.4,
+						'two': restaurant.user_rating.aggregate_rating > 1.9,
+						'twohalf': restaurant.user_rating.aggregate_rating > 2.4,
+						'three': restaurant.user_rating.aggregate_rating > 2.9,
+						'threehalf': restaurant.user_rating.aggregate_rating > 3.4,
+						'four': restaurant.user_rating.aggregate_rating > 3.9,
+						'fourhalf': restaurant.user_rating.aggregate_rating > 4.4,
+						'five': restaurant.user_rating.aggregate_rating > 4.9 }"></span>
+						<small>
+							<span data-bind="text: restaurant.user_rating.aggregate_rating"></span> /
+							<span data-bind="text: restaurant.user_rating.votes"></span>
+						</small>
+					</div>
+					<div class="item-location">
+						<small>
+							<span data-bind="text: restaurant.location.address"></span>
+						</small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Google map -->
+	<div id="map-canvas"></div>
+	<!-- Templates -->
+	<span id="templates" hidden>
+		<!-- Marker info window -->
+		<div id="info-window" data-bind="if: curentRestaurant()" type="text/template">
+			<div class="info-image" data-bind="style: {'backgroundImage': 'url('+ curentRestaurant().restaurant.thumb +')'}"></div>
+			<div class="info-title">
+				<p data-bind="text: curentRestaurant().restaurant.cuisines"></p>
+				<h5 data-bind="text: curentRestaurant().restaurant.name"></h5>
+				<div class="item-rating">
+					<span class="ratings" data-bind="css: {
+					'one': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.0,
+					'onehalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.4,
+					'two': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.9,
+					'twohalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 2.4,
+					'three': curentRestaurant().restaurant.user_rating.aggregate_rating > 2.9,
+					'threehalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 3.4,
+					'four': curentRestaurant().restaurant.user_rating.aggregate_rating > 3.9,
+					'fourhalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 4.4,
+					'five': curentRestaurant().restaurant.user_rating.aggregate_rating > 4.9 }"></span>
+					<small>
+						<span data-bind="text: curentRestaurant().restaurant.user_rating.aggregate_rating"></span> /
+						<span data-bind="text: curentRestaurant().restaurant.user_rating.votes"></span>
+						<ul>
+							<li title="Street View">
+							<a href="#" data-bind="click: openStreetView">
+							<i class="material-icons">streetview</i></a>
+							</li>
+							<li title="Photo Galery">
+							<a data-bind="attr: { href: curentRestaurant().restaurant.photos_url }" target="_blank">
+							<i class="material-icons">photo</i></a>
+							</li>
+							<li title="Restaurant Menu">
+							<a data-bind="attr: { href: curentRestaurant().restaurant.menu_url }" target="_blank">
+							<i class="material-icons">map</i></a>
+							</li>
+					</ul>
+					</small>
+				</div>
+			</div>
+			<hr>
+			<p div class="info-content">
+				<b>Address: </b>
+				<span data-bind="text: curentRestaurant().restaurant.location.address"></span>
+				<br>
+				<b>Avarage cost for two: </b>
+				<span data-bind="text: curentRestaurant().restaurant.currency + '' + curentRestaurant().restaurant.average_cost_for_two"></span>
+			</p>
+		</div>
+	</span>
+	<!-- Scripts -->
+	<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+	<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script defer src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-debug.js"></script>
+	<script defer src="static/app.js"></script>
 </body>
 
 </html>
