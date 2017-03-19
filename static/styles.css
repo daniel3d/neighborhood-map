@@ -11,6 +11,48 @@ input, button, a { outline: 0; }
   display: none;
 }
 
+/* Marker Info Window
+------------------------------------------------------------------------------*/
+#info-window { 
+  min-width: 200px;
+  min-height: 200px;
+}
+
+#info-window h5, p {
+  margin: 0px 0px 5px;
+}
+
+#info-window .item-rating {
+  line-height: 24px;
+}
+
+
+#info-window ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+#info-window ul li {
+  float: left;
+  line-height: 11px;
+  margin-right: 5px;
+}
+
+#info-window ul li a:hover {
+    color: #272727;
+}
+
+#info-window .panel-item-image {
+  float: left;
+  width: 120px;
+  height: 105px;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
 /* Navigation Menu
 ------------------------------------------------------------------------------*/
 .nav-icon {
@@ -95,21 +137,21 @@ input, button, a { outline: 0; }
   font-family: 'Roboto Condensed', sans-serif;
 }
 
-.panel.hide {
-  height: auto;
-}
-
-.panel.hide .panel-search, .panel.hide .panel-items {
-  display: none;
-}
-
 .title {
   flex: 0 0 35px;
   background-color: #c2185b;
   padding: 15px;
   font-family: 'Damion', cursive;
   color: #fff;
-  font-size: 24px;
+  font-size: 25px;
+  padding-left: 58px;
+  position: relative;
+}
+
+.title .material-icons {
+  font-size: 35px;
+  position: absolute;
+  left: 15px;
 }
 
 .panel-search {
@@ -136,6 +178,24 @@ input, button, a { outline: 0; }
 
 }
 
+.panel .mdl-progress {
+  min-height: 5px;
+  width: 100%;
+}
+
+.panel-status {
+  color: #c2185b;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  display: flex;
+}
+
+.panel-status .material-icons {
+  margin-bottom: 15px;
+}
+
 #location-search:focus {
   border-color: #c2185b;
 }
@@ -157,6 +217,10 @@ input, button, a { outline: 0; }
   flex-flow: row wrap;
   padding: 5px 11px;
   border-bottom: 1px #e1e1e1 solid;
+}
+
+.panel-item.active {
+  background: rgba(194, 24, 91, 0.14);
 }
 
 .panel-item:hover {
@@ -222,6 +286,16 @@ input, button, a { outline: 0; }
 
 }
 
+@media only screen and (max-width: 641px) {
+  .panel.hide {
+    height: auto;
+  }
+
+  .panel.hide .panel-search, .panel.hide .panel-items {
+    display: none;
+  }
+}
+
 @media only screen and (min-width: 641px) {
   
   .panel {
@@ -237,10 +311,6 @@ input, button, a { outline: 0; }
 
   #add-marker-button {
     float: right;
-  }
-
-  .panel.hide .panel-search, .panel.hide .panel-items {
-    display: flex;
   }
 
   .panel-item-image {
@@ -279,8 +349,9 @@ input, button, a { outline: 0; }
 }
 
 .ratings:before, .ratings:after {
+  letter-spacing: -1px;
   display: inline-block;
-  font-family: FontAwesome;
+  font-family: 'Material Icons';
   font-style: normal;
   font-weight: normal;
   font-size: 17px;
@@ -291,7 +362,7 @@ input, button, a { outline: 0; }
 
 .ratings:before {
   color: #F9C8D3;
-  content: "\f006\f006\f006\f006\f006";
+  content: "\E83A\E83A\E83A\E83A\E83A";
 }
 
 .ratings:after {
@@ -301,37 +372,57 @@ input, button, a { outline: 0; }
 }
 
 .ratings.one:after {
-  content: "\f005";
+  content: "\E838";
 }
 
 .ratings.onehalf:after {
-  content: "\f005\f089";
+  content: "\E838\E839";
 }
 
 .ratings.two:after {
-  content: "\f005\f005";
+  content: "\E838\E838";
 }
 
 .ratings.twohalf:after {
-  content: "\f005\f005\f089";
+  content: "\E838\E838\E839";
 }
 
 .ratings.three:after {
-  content: "\f005\f005\f005";
+  content: "\E838\E838\E838";
 }
 
 .ratings.threehalf:after {
-  content: "\f005\f005\f005\f089";
+  content: "\E838\E838\E838\E839";
 }
 
 .ratings.four:after {
-  content: "\f005\f005\f005\f005";
+  content: "\E838\E838\E838\E838";
 }
 
 .ratings.fourhalf:after {
-  content: "\f005\f005\f005\f005\f089";
+  content: "\E838\E838\E838\E838\E839";
 }
 
 .ratings.five:after {
-  content: "\f005\f005\f005\f005\f005";
+  content: "\E838\E838\E838\E838\E838";
+}
+
+
+/* Material design Css..
+------------------------------------------------------------------------------*/
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+.mdl-progress-pink > .progressbar {
+    background-color: rgb(194, 24, 91) !important;
+}
+
+.mdl-progress-pink > .bufferbar {
+    background-image: linear-gradient(to right, rgba(255,255,255, 0.7), rgba(255,255,255, 0.7)), linear-gradient(to right, rgb(194, 24, 91), rgb(194, 24, 91)) !important;
+}
+
+.mdl-progress-pink > .auxbar {
+    background-image: linear-gradient(to right, rgba(255,255,255, 0.9), rgba(255,255,255, 0.9)), linear-gradient(to right,rgb(194, 24, 91),rgb(194, 24, 91)) !important;
 }

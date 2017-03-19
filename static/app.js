@@ -26,18 +26,53 @@ var NeighborhoodMapViewModel = function() {
 	self.restaurants = ko.observableArray([]);
 	self.panelVisible = ko.observable(true);
 	self.curentRestaurant = ko.observable();
+	self.status = ko.observable({ 
+		icon: '',
+		text: '',
+		loading: false 
+	});
 
 	// Toogle ui panel visability efect only on mobile...
 	self.tooglePanel = function() { self.panelVisible(self.panelVisible() ? false : true); }
+	// Open marker info.
+	self.openMarkerInfo = function(item){
+		// Set curent restaurant...
+		self.curentRestaurant(item);
+		// Zoom closer.
+		map.setZoom(15);
+		// Open the window info...
+		infoWindow.open(map, item.marker);
+		// Center the map on the marker
+		map.setCenterWithPan(item.marker.getPosition(), -$infoWindow.height());
+		// make sure we hide the ui pannel on mobile...
+		if(self.panelVisible()) { self.tooglePanel(); }
+		// Scroll to the curent open resturant
+    	scrollToResturantInList(item.restaurant.id);
+	}
+	// Open Street View
+	self.openStreetView = function(item) {
+		item = (item.curentRestaurant) ? item.curentRestaurant() : item;
+		panorama = map.getStreetView();
+		panorama.setPosition(item.marker.getPosition());
+		// update the point of view
+		panorama.setPov({ heading: 34, pitch: 10, zoom: 1 });
+		panorama.setVisible(true);
+		google.maps.event.trigger(panorama,'resize');
+	}
 
 	var 
+	// Set the status to notify the user what we are doing.
+	setStatus = function(update) {
+		self.status($.extend({}, self.status(), update));
+	},
 	// Calculate by how much to pan the map so is not stuck under the UI.
 	// here we only calculate the value based on the window widht and panel width
 	calculatePan = function() {
+		// Only calculate on bigger than mobile.
+		// We put the ui on top of the map so no pan needed.
 		if(winWidth = $(window).width() > 640) {
 			return -Math.abs((winWidth/2) - ((winWidth - $panelLeft.width())/2)); 
-		}
-		return 0;
+		} return 0;
 	},
 	// Calculate the proximity of the visible map
 	// we use this to work out the radius in meters for our search with zomato api.
@@ -49,36 +84,32 @@ var NeighborhoodMapViewModel = function() {
 		return google.maps.geometry.spherical.computeDistanceBetween(sw, ne) / 4;
 	},
 	// Remove all existing markers from the map use this function to keep the map faster.
-	clearResturants = function() {
+	clearrestaurants = function() {
+		// Remove the markers from the map.
 		$.each(self.restaurants(), function(index, item){
 			item.marker.setMap(null);
 		});
+		// Clean the list of restaurants
 		self.restaurants([]);
+		// Make sure we close any open info window.
+		infoWindow.close();
+		// Also make sure we fire closeclick as we may be lissening for it.
+		google.maps.event.trigger(infoWindow, "closeclick");
 	},
-	openMarkerInfo = function(item){
-		// Set curent resturant...
-		self.curentRestaurant(item.restaurant);
-		// Open the window info...
-		infoWindow.open(map, item.marker);
-		// make sure we hide the ui pannel on mobile...
-		if(self.panelVisible()) {
-			self.tooglePanel(); 
-		}
-	},
-	// Show resturants returned from the zomato api.
-	showResturants = function(data) {
+	// Show restaurants returned from the zomato api.
+	showrestaurants = function(data) {
 		var 
 		restaurants = [];
 		bounds = new google.maps.LatLngBounds(),
 		
-		// For all resturants let preforme this function to add marker...
+		// For all restaurants let preforme this function to add marker...
 		$.each(data.restaurants, function(index, item){
 			var 
 			latitude = parseFloat(item.restaurant.location.latitude),
 			longitude = parseFloat(item.restaurant.location.longitude);
-			// Make sure we add only resturants with corect lat/long.
+			// Make sure we add only restaurants with corect lat/long.
 			if(latitude != 0.00 && longitude != 0.00) {
-				// Set the marker for this resturant
+				// Set the marker for this restaurant
 				item.marker = new google.maps.Marker({
 					title: item.restaurant.name,
 					position: new google.maps.LatLng(latitude, longitude),
@@ -89,18 +120,24 @@ var NeighborhoodMapViewModel = function() {
 				restaurants.push(item);
 				// Add event lisener to open the info window later.
 				google.maps.event.addListener(item.marker, 'click', function() {
-					openMarkerInfo(item);
+					self.openMarkerInfo(item);
 				});
 			}
 		});
-		// Fix bond on the map
-		map.fitBoundsWithPan(bounds);
-		self.restaurants(restaurants);
+
+		if(restaurants.length > 0) {
+			// Fix bond on the map
+			map.fitBoundsWithPan(bounds, 0);
+			self.restaurants(restaurants);
+		} else {
+			setStatus({ text: "No restaurants found in this area!", icon: "priority_high" });
+		}
 	},
 	// Update curent location
 	updateLocation = function(center, proximity) {
 		// First let clear the markers
-		clearResturants();
+		setStatus({ text: "Searching for restaurants...", icon: "location_on", loading: true });
+		clearrestaurants();
 		// Make Zoomato request based on the curent location center.
 		$.ajax({ 
 			beforeSend: function(request) {
@@ -115,9 +152,27 @@ var NeighborhoodMapViewModel = function() {
 				'sort=rating'
 			].join('&'),
 			success: function(data) {
-				showResturants(data);
+				setStatus({ text: "", loading: false });
+				showrestaurants(data);
 			}
 		});
+	},
+	// Scroll to active resturant in the list
+	scrollToResturantInList = function(id) {
+		var
+		$resturantsList = $('.panel-items'),
+		$curentResturantListItem = $("#restaurant_"+id);
+	
+		console.log(
+			$curentResturantListItem.offset().top, 
+			$resturantsList.offset().top, 
+			$curentResturantListItem.offset().top - $resturantsList.offset().top);
+
+		$(".panel-item.active").removeClass("active");
+		$curentResturantListItem.addClass('active');
+		$resturantsList.animate({
+        	scrollTop: $curentResturantListItem.offset().top - $resturantsList.offset().top
+    	}, 700);
 	}
 
 	// Load map style async...
@@ -131,7 +186,7 @@ var NeighborhoodMapViewModel = function() {
 	// Lissen for place changed when selected from the location search.
 	searchBox.addListener('place_changed', function() {
 		var location = searchBox.getPlace();
-		map.fitBoundsWithPan(location.geometry.viewport, function() { 
+		map.fitBoundsWithPan(location.geometry.viewport, 0, function() { 
 			updateLocation(map.getCenter(), calculateProximity());
 		});
 	});
@@ -149,9 +204,9 @@ var NeighborhoodMapViewModel = function() {
 	});
 
 	// Initilize the map.
-	geocoder.geocode({address: 'NY, United States'}, function(results, status) {
+	geocoder.geocode({address: $searchInput.val()}, function(results, status) {
 		if(status == 'OK') {
-			map.fitBoundsWithPan(results[0].geometry.viewport, function() { 
+			map.fitBoundsWithPan(results[0].geometry.viewport, 0, function() { 
 				updateLocation(map.getCenter(), calculateProximity()); 
 			});
 		}
@@ -160,20 +215,21 @@ var NeighborhoodMapViewModel = function() {
 	// Move the infoWindow so we dont lose the ko bindings.
 	google.maps.event.addListener(infoWindow, "closeclick", function () {
 		$("#templates").append($infoWindow);
+		$(".panel-item.active").removeClass("active");
 	});
 
 	// Set map center and add pan
-	google.maps.Map.prototype.setCenterWithPan = function(latLng, beforePan) {
+	google.maps.Map.prototype.setCenterWithPan = function(latLng, topOffset, beforePan) {
 		this.setCenter(latLng);
 		if(typeof beforePan === "function") beforePan(this);
-		this.panBy(calculatePan(), 0);
+		this.panBy(calculatePan(), topOffset);
 	}
 
 	// Fit bounds and add pan
-	google.maps.Map.prototype.fitBoundsWithPan = function(viewport, beforePan) {
+	google.maps.Map.prototype.fitBoundsWithPan = function(viewport, topOffset, beforePan) {
 		this.fitBounds(viewport);
 		if(typeof beforePan === "function") beforePan(this);
-		this.panBy(calculatePan(), 0);
+		this.panBy(calculatePan(), topOffset);
 	}
 
 }
