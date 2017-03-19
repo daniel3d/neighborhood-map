@@ -173,7 +173,7 @@ var NeighborhoodMapViewModel = function() {
         }
 
     // Load map style async...
-    $.getJSON('/static/map-style.json', function(data) {
+    $.getJSON('static/map-style.json', function(data) {
         map.setOptions({ styles: data });
     });
 
