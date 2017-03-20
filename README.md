@@ -2,6 +2,8 @@
 
 ## For Udacity Full Stack Web Developer Nanodegree
 
+![screenshot](https://c1.staticflickr.com/3/2891/33383650972_5f556b4cd7_h.jpg)
+
 #### Installation instructions 
  * Visit the [Github Page](https://daniel3d.github.io/neighborhood-map/)
  * If cloning this repo make sure you serve the `index.html` from server to avoid cross error when loading the `map-style.json` 
