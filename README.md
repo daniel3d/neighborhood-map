@@ -3,7 +3,8 @@
 ## For Udacity Full Stack Web Developer Nanodegree
 
 #### Installation instructions 
- * Simple just use `index.html` or to view it use the [hosted Github Pages link](https://daniel3d.github.io/neighborhood-map/)
+ * Visit the [Github Page](https://daniel3d.github.io/neighborhood-map/)
+ * If cloning this repo make sure you serve the `index.html` from server to avoid cross error when loading the `map-style.json` 
 
 ### Stuff used to make this:
  * [jQuery](https://jquery.com/) Simplifies HTML/DOM manipulation

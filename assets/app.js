@@ -8,6 +8,7 @@ var NeighborhoodMapViewModel = function() {
 		$infoWindow = $('#info-window'),
 		$searchInput = $('#location-search'),
 		minZoomLevel = 11,
+		firstInfoWindowOpening = true,
 		map = new google.maps.Map($canvas[0], {
 			zoom: minZoomLevel,
 			mapTypeControl: false,
@@ -43,12 +44,22 @@ var NeighborhoodMapViewModel = function() {
 		map.setZoom(15);
 		// Open the window info...
 		infoWindow.open(map, item.marker);
+		// If we are opening info window for first time 
+		// we need to open it again after 100ms becouse there is a bug on mobile displays
+		// the infowindow parent element get rendered with max-width of 0px;
+		if(firstInfoWindowOpening) {
+			firstInfoWindowOpening = false;
+			setTimeout(function(){
+				infoWindow.open(map, item.marker);
+			}, 100);
+		}
 		// Center the map on the marker
 		map.setCenterWithPan(item.marker.getPosition(), -$infoWindow.height());
 		// make sure we hide the ui pannel on mobile...
 		if (self.panelVisible()) { self.tooglePanel(); }
 		// Scroll to the curent resturant and make it active
 		scrollToResturantInList(item.restaurant.id);
+		
 	}
 	// Open Street View
 	self.openStreetView = function(item) {

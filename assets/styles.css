@@ -24,8 +24,7 @@ a {
 
 /* Marker Info Window
 ------------------------------------------------------------------------------*/
-
-#info-window {
+.info-window {
     display: flex;
     min-width: 200px;
     min-height: 200px;
@@ -33,16 +32,16 @@ a {
     flex-flow: row wrap;
 }
 
-#info-window h5,
+.info-window h5,
 p {
     margin: 0px 0px 5px;
 }
 
-#info-window .item-rating {
+.info-window .item-rating {
     line-height: 24px;
 }
 
-#info-window ul {
+.info-window ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -50,17 +49,17 @@ p {
     margin-top: 5px;
 }
 
-#info-window ul li {
+.info-window ul li {
     float: left;
     line-height: 11px;
     margin-right: 5px;
 }
 
-#info-window ul li a:hover {
+.info-window ul li a:hover {
     color: #272727;
 }
 
-#info-window .info-image {
+.info-window .info-image {
     flex: 1 1 30%;
     max-width: 150px;
     min-height: 100px;
@@ -68,12 +67,12 @@ p {
     background-size: cover;
 }
 
-#info-window .info-title {
+.info-window .info-title {
     flex: 1 1 63%;
     padding-left: 2%;
 }
 
-#info-window .info-content {
+.info-window .info-content {
     width: 100%;
     border-top: 1px solid #ccc;
     margin-top: 10px;
@@ -312,7 +311,7 @@ p {
         max-width: 150px;
         min-height: 100px;
     }
-    #info-window .info-image {
+    .info-window .info-image {
         flex: 0 0 0%;
     }
     .panel-item-content {
@@ -346,7 +345,7 @@ p {
     .panel-item-image {
         flex: 0 0 0%;
     }
-    #info-window .info-image {
+    .info-window .info-image {
         flex: 1 1 30%;
     }
 }
@@ -358,7 +357,7 @@ p {
     .panel-item-image {
         flex: 1 1 15%;
     }
-    #info-window .info-image {
+    .info-window .info-image {
         flex: 0 0 0%;
     }
 }

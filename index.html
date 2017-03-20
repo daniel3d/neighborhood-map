@@ -70,50 +70,52 @@
 	<!-- Templates -->
 	<span id="templates" hidden>
 		<!-- Marker info window -->
-		<div id="info-window" data-bind="if: curentRestaurant()" type="text/template">
-			<div class="info-image" data-bind="style: {'backgroundImage': 'url('+ curentRestaurant().restaurant.thumb +')'}"></div>
-			<div class="info-title">
-				<p data-bind="text: curentRestaurant().restaurant.cuisines"></p>
-				<h5 data-bind="text: curentRestaurant().restaurant.name"></h5>
-				<div class="item-rating">
-					<span class="ratings" data-bind="css: {
-					'one': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.0,
-					'onehalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.4,
-					'two': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.9,
-					'twohalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 2.4,
-					'three': curentRestaurant().restaurant.user_rating.aggregate_rating > 2.9,
-					'threehalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 3.4,
-					'four': curentRestaurant().restaurant.user_rating.aggregate_rating > 3.9,
-					'fourhalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 4.4,
-					'five': curentRestaurant().restaurant.user_rating.aggregate_rating > 4.9 }"></span>
-					<small>
-						<span data-bind="text: curentRestaurant().restaurant.user_rating.aggregate_rating"></span> /
-						<span data-bind="text: curentRestaurant().restaurant.user_rating.votes"></span>
-						<ul>
-							<li title="Street View">
-							<a href="#" data-bind="click: openStreetView">
-							<i class="material-icons">streetview</i></a>
-							</li>
-							<li title="Photo Galery">
-							<a data-bind="attr: { href: curentRestaurant().restaurant.photos_url }" target="_blank">
-							<i class="material-icons">photo</i></a>
-							</li>
-							<li title="Restaurant Menu">
-							<a data-bind="attr: { href: curentRestaurant().restaurant.menu_url }" target="_blank">
-							<i class="material-icons">map</i></a>
-							</li>
-					</ul>
-					</small>
+		<div id="info-window">
+			<div class="info-window" data-bind="if: curentRestaurant()">
+				<div class="info-image" data-bind="style: {'backgroundImage': 'url('+ curentRestaurant().restaurant.thumb +')'}"></div>
+				<div class="info-title">
+					<p data-bind="text: curentRestaurant().restaurant.cuisines"></p>
+					<h5 data-bind="text: curentRestaurant().restaurant.name"></h5>
+					<div class="item-rating">
+						<span class="ratings" data-bind="css: {
+						'one': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.0,
+						'onehalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.4,
+						'two': curentRestaurant().restaurant.user_rating.aggregate_rating > 1.9,
+						'twohalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 2.4,
+						'three': curentRestaurant().restaurant.user_rating.aggregate_rating > 2.9,
+						'threehalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 3.4,
+						'four': curentRestaurant().restaurant.user_rating.aggregate_rating > 3.9,
+						'fourhalf': curentRestaurant().restaurant.user_rating.aggregate_rating > 4.4,
+						'five': curentRestaurant().restaurant.user_rating.aggregate_rating > 4.9 }"></span>
+						<small>
+							<span data-bind="text: curentRestaurant().restaurant.user_rating.aggregate_rating"></span> /
+							<span data-bind="text: curentRestaurant().restaurant.user_rating.votes"></span>
+							<ul>
+								<li title="Street View">
+								<a href="#" data-bind="click: openStreetView">
+								<i class="material-icons">streetview</i></a>
+								</li>
+								<li title="Photo Galery">
+								<a data-bind="attr: { href: curentRestaurant().restaurant.photos_url }" target="_blank">
+								<i class="material-icons">photo</i></a>
+								</li>
+								<li title="Restaurant Menu">
+								<a data-bind="attr: { href: curentRestaurant().restaurant.menu_url }" target="_blank">
+								<i class="material-icons">map</i></a>
+								</li>
+						</ul>
+						</small>
+					</div>
 				</div>
+				<hr>
+				<p div class="info-content">
+					<b>Address: </b>
+					<span data-bind="text: curentRestaurant().restaurant.location.address"></span>
+					<br>
+					<b>Avarage cost for two: </b>
+					<span data-bind="text: curentRestaurant().restaurant.currency + '' + curentRestaurant().restaurant.average_cost_for_two"></span>
+				</p>
 			</div>
-			<hr>
-			<p div class="info-content">
-				<b>Address: </b>
-				<span data-bind="text: curentRestaurant().restaurant.location.address"></span>
-				<br>
-				<b>Avarage cost for two: </b>
-				<span data-bind="text: curentRestaurant().restaurant.currency + '' + curentRestaurant().restaurant.average_cost_for_two"></span>
-			</p>
 		</div>
 	</span>
 	<!-- Scripts -->
