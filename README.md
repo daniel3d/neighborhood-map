@@ -1,12 +1,15 @@
-### ( Neighborhood Map )
+### ( Neighborhood Map ) - [live demo](https://daniel3d.github.io/neighborhood-map/)
 
 ## For Udacity Full Stack Web Developer Nanodegree
 
-![screenshot](https://c1.staticflickr.com/3/2891/33383650972_5f556b4cd7_h.jpg)
+![screenshot](https://c1.staticflickr.com/3/2900/33548820345_2cb6ff1a59_h.jpg)
 
 #### Installation instructions 
- * Visit the [Github Page](https://daniel3d.github.io/neighborhood-map/)
- * If cloning this repo make sure you serve the `index.html` from server to avoid cross error when loading the `map-style.json` 
+ - Clone the repo.
+ - Make sure you serve the app from a server not just by opening the `index.html` to allow proper execution of the javascript
+ - If you have Python execute this comand at the root folder of the app `python -m SimpleHTTPServer 8000`
+ - Open  your browser at [localhost:8000](http://localhost:8000)
+ - Enjoy
 
 ### Stuff used to make this:
  * [jQuery](https://jquery.com/) Simplifies HTML/DOM manipulation

@@ -297,10 +297,26 @@ p {
 ------------------------------------------------------------------------------*/
 
 #map-canvas {
+    top: 0px;
+    width: 100%;
     height: 100%;
+    z-index: 99;
     background: #000;
+    position: absolute;
 }
 
+#map-canvas.error {
+    background: #fff;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+#map-canvas.error i {
+    font-size: 90px;
+    margin-bottom: 20px;
+}
 
 /* Media queries..
 ------------------------------------------------------------------------------*/
@@ -330,7 +346,7 @@ p {
 }
 
 @media only screen and (min-width: 641px) {
-    .panel {
+    #map-canvas .panel {
         width: 50%;
         height: 93%;
         margin: 15px;
