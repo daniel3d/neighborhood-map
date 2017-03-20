@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title></title>
+	<title>Restaurants</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 	<meta charset="utf-8">
 	<!-- Styles -->
@@ -16,39 +16,42 @@
 <body>
 
 	<!-- Google map -->
-	<div id="map-canvas"></div>
+	<main id="map-canvas"></main>
 
 	<!-- UI panel -->
-	<div class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible()}">
+	<aside class="panel" id="panel-left" data-bind="css:{'hide': !panelVisible()}">
 
 		<!-- Logo and mobile nav-bar -->
-		<div class="title">
+		<nav class="title">
 			<i class="material-icons">restaurant</i> Restaurants
+			<span class="credits">Powered By Zomato</span> 
 			<button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
 				<span class="navLines"></span>
 			</button>
-		</div>
+		</nav>
 
 		<!-- Search bar -->
-		<div class="panel-search">
+		<section class="panel-search">
 			<input id="location-search" type="text" placeholder="Enter a location">
-		</div>
+		</section>
 
 		<!-- Loading bar -->
-		<div data-bind="visible: status().loading" class="mdl-progress mdl-js-progress mdl-progress__indeterminate mdl-progress-pink"></div>
+		<section data-bind="visible: status().loading" class="mdl-progress mdl-js-progress mdl-progress__indeterminate mdl-progress-pink"></section>
 
 		<!-- Status panel only visible when we have status message -->
-		<div class="panel-status" data-bind="visible: status().text != ''">
+		<section class="panel-status" data-bind="visible: status().text != ''">
 			<i class="material-icons md-48" data-bind="text: status().icon"></i>
 			<p data-bind="text: status().text"></p>
-		</div>
+		</section>
 
 		<!-- List of resturants -->
-		<div class="panel-items" data-bind="foreach: restaurants">
-			<div class="panel-item" data-bind="click: $parent.openMarkerInfo, attr: { id: 'restaurant_' + restaurant.id }">
+		<section class="panel-items" data-bind="foreach: restaurants">
+			<article class="panel-item" data-bind="click: $parent.openMarkerInfo, attr: { id: 'restaurant_' + restaurant.id }, css: {active: $parent.curentRestaurant() && $parent.curentRestaurant().id == restaurant.id }">
 				<div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ restaurant.thumb +')'}"></div>
 				<div class="panel-item-content">
-					<h4 class="item-title" data-bind="text: restaurant.name"></h4>
+					<header>
+						<h4 class="item-title" data-bind="text: restaurant.name"></h4>
+					</header>
 					<p class="item-desciption" data-bind="text: restaurant.cuisines"></p>
 					<div class="item-rating">
 						<span class="ratings" data-bind="css: restaurant.user_rating.rating_class"></span>
@@ -63,10 +66,10 @@
 						</small>
 					</div>
 				</div>
-			</div>
-		</div>
+			</article>
+		</section>
 
-	</div>
+	</aside>
 
 	<!-- Scripts -->
 	<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>

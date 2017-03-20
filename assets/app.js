@@ -21,6 +21,8 @@ var NeighborhoodMapViewModel = function() {
 		});
 
 	// Set observables
+	self.curentMarker = ko.observable();
+	self.curentRestaurant = ko.observable();
 	self.restaurants = ko.observableArray([]);
 	self.panelVisible = ko.observable(true);
 	self.status = ko.observable({
@@ -33,6 +35,9 @@ var NeighborhoodMapViewModel = function() {
 	self.tooglePanel = function(){ self.panelVisible(self.panelVisible() ? false : true); }
 	// Open marker info.
 	self.openMarkerInfo = function(item){
+		// Set the curent marker and resturant.
+		self.curentMarker(item.marker);
+		self.curentRestaurant(item.restaurant);
 		// Zoom closer.
 		map.setZoom(15);
 		// Add marker animation and turn it off after 1sec.
@@ -43,61 +48,58 @@ var NeighborhoodMapViewModel = function() {
 			item.marker.setIcon("assets/map-pin.png"); 
 		}, 1500);
 		// Harcode template as Required by the udacity reviewr.
-		infoWindow.setContent("<div id=\"info-window\"> \
-			<div class=\"info-window\"> \
-				<div class=\"info-image\" data-bind=\"style: {'backgroundImage': 'url('+ restaurant.thumb +')'}\"></div> \
-				<div class=\"info-title\"> \
-					<p data-bind=\"text: restaurant.cuisines\"></p> \
-					<h5 data-bind=\"text: restaurant.name\"></h5> \
+		infoWindow.setContent("<section id=\"info-window\"> \
+			<article class=\"info-window\"> \
+				<div class=\"info-image\" data-bind=\"style: {'backgroundImage': 'url('+ curentRestaurant().thumb +')'}\"></div> \
+				<header class=\"info-title\"> \
+					<p data-bind=\"text: curentRestaurant().cuisines\"></p> \
+					<h5 data-bind=\"text: curentRestaurant().name\"></h5> \
 					<div class=\"item-rating\"> \
-						<span class=\"ratings\" data-bind=\"css: restaurant.user_rating.rating_class\"></span> \
+						<span class=\"ratings\" data-bind=\"css: curentRestaurant().user_rating.rating_class\"></span> \
 						<small> \
-							<span data-bind=\"text: restaurant.user_rating.aggregate_rating\"></span> / \
-							<span data-bind=\"text: restaurant.user_rating.votes\"></span> \
+							<span data-bind=\"text: curentRestaurant().user_rating.aggregate_rating\"></span> / \
+							<span data-bind=\"text: curentRestaurant().user_rating.votes\"></span> \
 							<ul> \
-								<li title=\"Street View\"><a href=\"#\" data-bind=\"click: openStreetView\"><i class=\"material-icons\">streetview</i></a></li> \
-								<li title=\"Photo Galery\"><a data-bind=\"attr: { href: restaurant.photos_url }\" target=\"_blank\"><i class=\"material-icons\">photo</i></a></li> \
-								<li title=\"Restaurant Menu\"><a data-bind=\"attr: { href: restaurant.menu_url }\" target=\"_blank\"><i class=\"material-icons\">map</i></a></li> \
+								<li title=\"Street View\"><a href=\"#\" data-bind=\"click: openStreetViewForTheCurentMarker\"><i class=\"material-icons\">streetview</i></a></li> \
+								<li title=\"Photo Galery\"><a data-bind=\"attr: { href: curentRestaurant().photos_url }\" target=\"_blank\"><i class=\"material-icons\">photo</i></a></li> \
+								<li title=\"Restaurant Menu\"><a data-bind=\"attr: { href: curentRestaurant().menu_url }\" target=\"_blank\"><i class=\"material-icons\">map</i></a></li> \
 							</ul> \
 						</small> \
 					</div> \
-				</div> \
+				</header> \
 				<hr> \
 				<p div class=\"info-content\"> \
-					<b>Address: </b> <span data-bind=\"text: restaurant.location.address\"></span><br> \
-					<b>Avarage cost for two: </b> <span data-bind=\"text: restaurant.currency + '' + restaurant.average_cost_for_two\"></span> \
+					<b>Address: </b> <span data-bind=\"text: curentRestaurant().location.address\"></span><br> \
+					<b>Avarage cost for two: </b> <span data-bind=\"text: curentRestaurant().currency + '' + curentRestaurant().average_cost_for_two\"></span> \
 				</p> \
-			</div> \
-		</div>");
+			</article> \
+		</section>");
 		// Open the marker on the map.
 		infoWindow.open(map, item.marker);
 		// Apply this bindings to the newly rendered element.
-		ko.applyBindings({
-			restaurant: item.restaurant,
-			openStreetView: function(){ 
-				openStreetView(item.marker); 
-			}
-		}, document.getElementById("info-window"));
+		ko.applyBindings(self, document.getElementById("info-window"));
 		// Center the map on the marker
 		map.setCenterWithPan(item.marker.getPosition(), -$(document.getElementById("info-window")).height());
 		// make sure we hide the ui pannel on mobile...
 		if (self.panelVisible()) { self.tooglePanel(); }
 		// Scroll to the curent restaurant and make it active
-		scrollToResturantInList(item.restaurant.id);
+		scrollToCurentResturant();
+	}
+	// Open Street view for the curent resturant.
+	self.openStreetViewForTheCurentMarker = function(){
+		if(self.curentMarker()) {
+			panorama = map.getStreetView();
+			panorama.setPosition(self.curentMarker().getPosition());
+			panorama.setPov({ heading: 10, pitch: 10, zoom: 1 });
+			panorama.setVisible(true);
+			google.maps.event.trigger(panorama, 'resize');
+		}
 	}
 
 	var
 		// Set the status to notify the user what we are doing.
 		setStatus = function(update){
 			self.status($.extend({}, self.status(), update));
-		},
-		// Open Street view by given map marker.
-		openStreetView = function(marker){
-			panorama = map.getStreetView();
-			panorama.setPosition(marker.getPosition());
-			panorama.setPov({ heading: 10, pitch: 10, zoom: 1 });
-			panorama.setVisible(true);
-			google.maps.event.trigger(panorama, 'resize');
 		},
 		// Calculate by how much to pan the map so is not stuck under the UI.
 		// here we only calculate the value based on the window widht and panel width
@@ -238,15 +240,15 @@ var NeighborhoodMapViewModel = function() {
 			});
 		},
 		// Scroll to active resturant in the list
-		scrollToResturantInList = function(id){
-			var
-				$resturantItem = $("#restaurant_" + id),
-				$resturantsList = $('.panel-items');
-			$(".panel-item.active").removeClass("active");
-			$resturantItem.addClass('active');
-			$resturantsList.animate({
-				scrollTop: $resturantsList.scrollTop() + $resturantItem.position().top - $resturantsList.position().top
-			}, 700);
+		scrollToCurentResturant = function(){
+			if(self.curentRestaurant()) {
+				var
+					$resturantItem = $("#restaurant_" + self.curentRestaurant().id),
+					$resturantsList = $('.panel-items');
+				$resturantsList.animate({
+					scrollTop: $resturantsList.scrollTop() + $resturantItem.position().top - $resturantsList.position().top
+				}, 700);
+			}
 		};
 
 	// Load map style async...
