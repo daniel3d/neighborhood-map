@@ -24,6 +24,7 @@ var NeighborhoodMapViewModel = function() {
 	self.curentMarker = ko.observable();
 	self.curentRestaurant = ko.observable();
 	self.restaurants = ko.observableArray([]);
+	self.cuisines = ko.observableArray([]);
 	self.panelVisible = ko.observable(true);
 	self.status = ko.observable({
 		icon: '',
@@ -172,8 +173,9 @@ var NeighborhoodMapViewModel = function() {
 		},
 		// Show restaurants returned from the zomato api.
 		showrestaurants = function(data){
-			var restaurants = [];
-			bounds = new google.maps.LatLngBounds(),
+			var restaurants = [],
+				cuisines = [],
+				bounds = new google.maps.LatLngBounds();
 			// For all restaurants let preforme this function to add marker...
 			$.each(data.restaurants, function(index, item){
 			    var
@@ -198,6 +200,12 @@ var NeighborhoodMapViewModel = function() {
 					google.maps.event.addListener(item.marker, 'click', function() {
 						self.openMarkerInfo(item);
 					});
+					// let store the cuisines in array format for easy access later.
+					item.cuisines = item.restaurant.cuisines.split(",").map(function(item) {
+  						return item.trim();
+					});
+					// Let update curent list of cuisines..
+					cuisines = cuisines.concat(item.cuisines);
 				}
 			});
 			// Make sure we have some resturants
@@ -205,6 +213,7 @@ var NeighborhoodMapViewModel = function() {
 				// Fix bond on the map
 				map.fitBoundsWithPan(bounds, 0);
 				self.restaurants(restaurants);
+				self.cuisines(cuisines);
 			} else {
 				// If no resturants let notify the user.
 				setStatus({ text: "No restaurants found in this area!", icon: "priority_high" });
