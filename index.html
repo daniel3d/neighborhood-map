@@ -15,6 +15,9 @@
 
 <body>
 
+	<!-- Credits -->
+	<a href="#" class="credits">Powered By Zomato</a> 
+
 	<!-- Google map -->
 	<main id="map-canvas"></main>
 
@@ -24,7 +27,6 @@
 		<!-- Logo and mobile nav-bar -->
 		<nav class="title">
 			<i class="material-icons">restaurant</i> Restaurants
-			<span class="credits">Powered By Zomato</span> 
 			<button class="nav-icon" data-bind='click: tooglePanel, css: {x : panelVisible() }'>
 				<span class="navLines"></span>
 			</button>
@@ -33,8 +35,25 @@
 		<!-- Search bar -->
 		<section class="panel-search">
 			<input id="location-search" type="text" placeholder="Enter a location">
-			<div class="filter" title="Filter Cuisines" data-bind="visible: cuisines().length">
-				<i class="material-icons md-36">tune</i>
+			<div class="filter open" title="Filter Cuisines" data-bind="visible: cuisines().length, css:{'open': filterVisible()}">
+				<div class="filter-title">
+					<button class="filter-clear" data-bind="click: toogleFilter">
+						Clear
+					</button>
+					<button class="filter-open" data-bind="click: toogleFilter">
+						<i class="material-icons md-36" data-badge="1">tune</i>
+					</button>
+				</div>
+				
+				<div class="filter-items" data-bind="foreach: cuisines">
+					<div class="filter-item">
+						<div class="toggle">
+							<input type="checkbox" id="toggle2" data-bind="attr: { id: 'toggle_filter' + $index() }"/>
+							<label data-bind="attr: { for: 'toggle_filter' + $index() }"></label>
+						</div>
+						<span data-bind="text: $data"></span>
+					</div>
+				</div>
 			</div>
 		</section>
 

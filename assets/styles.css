@@ -21,6 +21,39 @@ a {
     left: -2000px;
 }
 
+.credits {
+    font-size: 15px;
+    position: absolute;
+    bottom: 5px;
+    left: 77px;
+    z-index: 99999998;
+    color: #e4e4e4;
+    font-weight: 400;
+    padding-left: 7px;
+    text-decoration: none;
+    border-left: 1px solid #fff;
+    text-shadow: 1px 1px 7px rgba(0, 0, 0, 0.74);
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+
+.credits:hover {
+    color: #fff;
+}
+
+/* for custom scrollbar for webkit browser
+------------------------------------------------------------------------------*/
+::-webkit-scrollbar {
+    width: 20px;
+} 
+
+::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 15px rgba(0,0,0,0.3);*/
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbcbcb;
+    
+}
 
 /* Marker Info Window
 ------------------------------------------------------------------------------*/
@@ -158,7 +191,7 @@ p {
     font-size: 25px;
     padding-left: 58px;
     position: relative;
-    line-height: 25px;
+    z-index: 9999;
 }
 
 .title .material-icons {
@@ -166,15 +199,6 @@ p {
     position: absolute;
     left: 15px;
 }
-
-.credits {
-    font-family: "Roboto","Helvetica","Arial",sans-serif;
-    font-size: 9px;
-    position: absolute;
-    top: 32px;
-    left: 60px;
-}
-
 
 
 /* App ui and Panels
@@ -184,11 +208,12 @@ p {
     width: 100%;
     height: 100%;
     max-width: 640px;
+    overflow: hidden;
     display: flex;
     flex-flow: column;
     outline: none;
     background-color: #fff;
-    box-shadow: 0 13px 25px 0 rgba(0, 0, 0, 0.3), 0 11px 7px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     transition: all 400ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
     z-index: 9999999 !important;
     font-family: 'Roboto Condensed', sans-serif;
@@ -196,17 +221,14 @@ p {
 
 .panel-search {
     display: flex;
-    flex: 0 0 40px;
-    padding-top: 12px;
-    padding-bottom: 14px;
+    flex: 0 0 67px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.09)
 }
 
 #location-search {
     width: 100%;
     min-height: 40px;
-    margin-left: 12px;
-    margin-right: 12px;
+    margin: 12px;
     background-color: #fff;
     font-size: 15px;
     font-weight: 300;
@@ -217,15 +239,132 @@ p {
     border-color: #ececec;
 }
 
+
+
+/* Filter --- */
+
 .filter {
-    cursor: pointer;
-    margin-right: 15px;
-    color: #868686;
-    padding-top: 4px;
+    width: 50px;
+    height: 66px;
+    min-width: 50px;
+    position: relative;
+    will-change: transform;
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
+    transform-origin: 100 100;
+    border-radius: 100% 100% 100% 100%;
+    transition: /* Transition Out */ all 0ms linear;
 }
 
-.filter:hover {
+.filter.open {
+    top: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: #721238;
+    z-index: 999;
+    /*padding-top: 130px;*/
+    border-radius: 0% 0% 0% 0%;
+    transition: /* Transition In */
+        background-color 270ms ease-in-out 30ms,
+        height 310ms ease-in-out,
+        width 160ms ease-in-out, 
+        border-bottom-right-radius 25ms ease-in-out, 
+        border-bottom-left-radius 243ms ease-in-out 57ms,
+        border-top-left-radius 155ms ease-in-out, 
+        border-top-right-radius 25ms, 
+        padding 1ms linear;
+}
+
+.filter-open, .filter-clear {
+    padding: 0px;
+    margin: 15px;
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    border: none;
+    background: none;
+    color: #868686;
+}
+
+.filter-clear {
+    font-size: 20px;
+    padding: 10px 14px;
+    margin: 10px 10px;
+    text-transform: uppercase;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.filter-open:hover{
     color: #000;
+}
+
+.filter-clear {
+    left: 0px;
+}
+
+.filter-clear:hover  {
+    color: #fff;
+    background: #8f214c;
+}
+
+.filter.open .filter-open, .filter-clear {
+    top: 65px;
+    color: #fff;
+}
+
+.filter.open .filter-open:hover {
+    color: #fff;
+}
+
+
+
+
+.filter-title {
+    flex: 0 0 130px;
+    height: 130px;
+}
+
+
+.filter-items {
+    color: #fff;
+    border-top: 2px solid #4b0b25;
+    flex: 1 1 auto;
+    overflow: auto;
+    flex-wrap: wrap;
+}
+
+.filter-items::-webkit-scrollbar-thumb {
+    background: #c2185b;
+    
+}
+
+.filter-item {
+    display: flex;
+    flex-flow: row wrap;
+    font-size: 25px;
+    border-bottom: 1px solid #c2185b;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    align-items: center;
+    line-height: 12px;
+}
+
+.filter-item .toggle {
+    transform: scale(0.6);
+    margin-left: 10px;
+    margin-bottom: 0px;
+}
+
+.filter-item .toggle label {
+    background-color: #4b0b25 !important;
+}
+
+.filter-item .toggle input:checked + label {
+    background-color: #c2185b !important;
 }
 
 .panel .mdl-progress {
@@ -258,7 +397,6 @@ p {
     flex: 1 1 auto;
     overflow: auto;
     flex-wrap: wrap;
-    padding: 10px 0;
 }
 
 .panel-item {
@@ -505,4 +643,113 @@ p {
 
 .mdl-progress-pink > .auxbar {
     background-image: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), linear-gradient(to right, rgb(194, 24, 91), rgb(194, 24, 91)) !important;
+}
+
+/* Toggle checkbox..
+------------------------------------------------------------------------------*/
+.toggle {
+  margin-bottom: 10px;
+}
+.toggle label {
+  position: relative;
+  display: inline-block;
+  width: 90px;
+  height: 50px;
+  background-color: #e1e1e1;
+  border-radius: 50px;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.1);
+  -webkit-tap-highlight-color: transparent;
+}
+.toggle label:before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  height: 44px;
+  width: 44px;
+  background-color: #fff;
+  border-radius: 46px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  -webkit-transition: box-shadow 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out;
+  -webkit-animation: moveLeft 0.3s ease-in-out;
+          animation: moveLeft 0.3s ease-in-out;
+}
+.toggle input {
+  display: none;
+}
+.toggle input:checked + label {
+  background-color: #57de72;
+}
+.toggle input:checked + label:before {
+  -webkit-transform: translateX(40px);
+          transform: translateX(40px);
+  box-shadow: -1px -1px 5px rgba(0, 0, 0, 0.1);
+  -webkit-animation: moveRight 0.3s ease-in-out;
+          animation: moveRight 0.3s ease-in-out;
+}
+
+@-webkit-keyframes moveRight {
+  0% {
+    width: 46px;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  45% {
+    width: 52px;
+  }
+  100% {
+    width: 46px;
+    -webkit-transform: translateX(40px);
+            transform: translateX(40px);
+  }
+}
+
+@keyframes moveRight {
+  0% {
+    width: 46px;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  45% {
+    width: 52px;
+  }
+  100% {
+    width: 46px;
+    -webkit-transform: translateX(40px);
+            transform: translateX(40px);
+  }
+}
+@-webkit-keyframes moveLeft {
+  0% {
+    width: 46px;
+    -webkit-transform: translateX(40px);
+            transform: translateX(40px);
+  }
+  45% {
+    width: 52px;
+  }
+  100% {
+    width: 46px;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+@keyframes moveLeft {
+  0% {
+    width: 46px;
+    -webkit-transform: translateX(40px);
+            transform: translateX(40px);
+  }
+  45% {
+    width: 52px;
+  }
+  100% {
+    width: 46px;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
 }

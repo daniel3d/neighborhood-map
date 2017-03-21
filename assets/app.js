@@ -26,6 +26,7 @@ var NeighborhoodMapViewModel = function() {
 	self.restaurants = ko.observableArray([]);
 	self.cuisines = ko.observableArray([]);
 	self.panelVisible = ko.observable(true);
+	self.filterVisible = ko.observable(false);
 	self.status = ko.observable({
 		icon: '',
 		text: '',
@@ -34,6 +35,8 @@ var NeighborhoodMapViewModel = function() {
 
 	// Toogle ui panel visability efect only on mobile...
 	self.tooglePanel = function(){ self.panelVisible(self.panelVisible() ? false : true); }
+	// Toogle ui panel visability efect only on mobile...
+	self.toogleFilter = function(){ self.filterVisible(self.filterVisible() ? false : true); }
 	// Open marker info.
 	self.openMarkerInfo = function(item){
 		// Set the curent marker and resturant.
