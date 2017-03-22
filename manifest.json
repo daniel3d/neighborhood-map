@@ -45,6 +45,7 @@
  "start_url": "/neighborhood-map/",
  "scope": "/neighborhood-map/",
  "display": "standalone",
+ "orientation": "portrait",
  "background_color": "#ffffff",
  "theme_color": "#c2185b"
 }
