@@ -21,22 +21,62 @@ var NeighborhoodMapViewModel = function() {
 		});
 
 	// Set observables
+	self.location = {
+		center: ko.observable(),
+		zoom: ko.observable(),
+		centered: ko.observable(true),
+		address: ko.observable('NY, United States')
+	}
 	self.curentMarker = ko.observable();
 	self.curentRestaurant = ko.observable();
 	self.restaurants = ko.observableArray([]);
 	self.cuisines = ko.observableArray([]);
 	self.panelVisible = ko.observable(true);
 	self.filterVisible = ko.observable(false);
+	self.filterAllSelected = ko.computed(function() {
+		// Check if all cuisines are selected.
+		for(i = 0; i < self.cuisines().length; i++) {
+			if(self.cuisines()[i].selected() == false) {
+				return false;
+			}
+		}
+		// All cuisines are selected.
+		return true;
+	});
 	self.status = ko.observable({
 		icon: '',
 		text: '',
 		loading: false
 	});
 
+	// Recenter Map
+	self.reCenterMap = function(){
+		infoWindow.close();
+		self.location.centered(true);
+		map.setCenter(self.location.center());
+		map.setZoom(self.location.zoom());
+	}
+	// Filter select by item
+	self.filterSelectToggle = function(cusine){
+		if(!self.status().loading) {
+			cusine.selected(!cusine.selected());
+			toogleResturantsVisability();
+		}
+	}
+	// Filter select all
+	self.filterSelectToggleAll = function(){
+		if(!self.status().loading) {
+			var allSelected = self.filterAllSelected();
+			$.each(self.cuisines(), function(index, cusine){
+				cusine.selected(!allSelected);
+			});
+			toogleResturantsVisability();
+		}
+	}
 	// Toogle ui panel visability efect only on mobile...
-	self.tooglePanel = function(){ self.panelVisible(self.panelVisible() ? false : true); }
+	self.tooglePanel = function(){ self.panelVisible(!self.panelVisible()); }
 	// Toogle ui panel visability efect only on mobile...
-	self.toogleFilter = function(){ self.filterVisible(self.filterVisible() ? false : true); }
+	self.toogleFilter = function(){ self.filterVisible(!self.filterVisible()); }
 	// Open marker info.
 	self.openMarkerInfo = function(item){
 		// Set the curent marker and resturant.
@@ -45,12 +85,12 @@ var NeighborhoodMapViewModel = function() {
 		// Zoom closer.
 		map.setZoom(15);
 		// Add marker animation and turn it off after 1sec.
-		item.marker.setIcon("assets/map-pin-no-shadow.png");
+		item.marker.setIcon("assets/map-pin-clean.png");
 		item.marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ 
 			item.marker.setAnimation(null);
 			item.marker.setIcon("assets/map-pin.png"); 
-		}, 1500);
+		}, 1400);
 		// Harcode template as Required by the udacity reviewr.
 		infoWindow.setContent("<section id=\"info-window\"> \
 			<article class=\"info-window\"> \
@@ -100,7 +140,46 @@ var NeighborhoodMapViewModel = function() {
 		}
 	}
 
-	var
+	var // Private functions...
+		// Upldate witch resturants are visible based on curent filters
+		toogleResturantsVisability = function() {
+			// Reset the animation timer.
+			var 
+				filterAnimationTimer = 0,
+				filterAnimationQueue = 0;
+			// Get all active cuisines
+			var activeCuisines = $.map(self.cuisines(), function(cusine) {
+				if(cusine.selected()) { return cusine.name; }
+			});
+			// Let go over all resturants and check if they need to be visible.
+			$.each(self.restaurants(), function(index, item){
+				// Let try to find at least one match.
+				var visible = activeCuisines.some(function (c) {
+					return item.cuisines.indexOf(c) >= 0;
+				});
+				// If is already hidden let show it
+				if(visible && !item.visible()) {
+					setStatus({loading:true});
+					item.visible(true);
+					filterAnimationQueue += 1;
+					//console.log(filterAnimationQueue);
+					setTimeout(function(){
+						item.marker.setIcon("assets/map-pin-clean.png");
+						item.marker.setAnimation(google.maps.Animation.DROP);
+						item.marker.setMap(map);
+						setTimeout(function(){
+							filterAnimationQueue -= 1;
+							item.marker.setIcon("assets/map-pin.png");
+							if(filterAnimationQueue <= 0){ setStatus({loading:false}); }
+						},700);
+					}, filterAnimationTimer += 120);
+				} 
+				else if(!visible && item.visible()) {
+					item.visible(false);
+					item.marker.setMap(null);
+				}
+			});
+		},
 		// Set the status to notify the user what we are doing.
 		setStatus = function(update){
 			self.status($.extend({}, self.status(), update));
@@ -197,30 +276,61 @@ var NeighborhoodMapViewModel = function() {
 					item.restaurant.user_rating.rating_class = generateRatingClass(item.restaurant.user_rating.aggregate_rating);
 					// Let extend the visible bonds of the map
 					bounds.extend(item.marker.position);
-					// Push to updated item to the list.
-					restaurants.push(item);
 					// Add event lisener to open the info window later.
 					google.maps.event.addListener(item.marker, 'click', function() {
 						self.openMarkerInfo(item);
+						self.filterVisible(false);
 					});
-					// let store the cuisines in array format for easy access later.
-					item.cuisines = item.restaurant.cuisines.split(",").map(function(item) {
-  						return item.trim();
-					});
-					// Let update curent list of cuisines..
-					cuisines = cuisines.concat(item.cuisines);
+					// Add resturant cuisines.
+					updateCuisines(cuisines, item);
+					// Push to updated item to the list.
+					item.visible = ko.observable(true);
+					restaurants.push(item);
 				}
 			});
 			// Make sure we have some resturants
 			if (restaurants.length > 0) {
 				// Fix bond on the map
 				map.fitBoundsWithPan(bounds, 0);
+				// Store the bonds so we can re center later
+				self.location.center(map.getCenter());
+				self.location.zoom(map.getZoom());
+				self.location.centered(true);
+				// Store all the resturant
 				self.restaurants(restaurants);
+				// Store all of the cuisines
 				self.cuisines(cuisines);
 			} else {
 				// If no resturants let notify the user.
 				setStatus({ text: "No restaurants found in this area!", icon: "priority_high" });
 			}
+		},
+		// Extact cuisines from resturant item.
+		updateCuisines = function(cuisines, item) {
+			// Keep track of existing cuisines
+			var alreadyAddedCuisines = [];
+			// Explode all cuisines separated by , and trim them from spaces
+			// let store the cuisines in array format for easy access later.
+			item.cuisines = item.restaurant.cuisines.split(",").map(function(cuisine) {
+				return cuisine.trim();
+			});
+			// Check if the resturant cuisines are already added.
+			$.each(cuisines, function(index, cuisine) {
+				if(item.cuisines.indexOf(cuisine.name) >= 0) {
+					cuisine.resturants += 1;
+					alreadyAddedCuisines.push(cuisine.name);
+				}
+			});
+			// Add all cuisines that are not added already.
+			$.each(item.cuisines, function(index, cuisine) {
+				if(alreadyAddedCuisines.indexOf(cuisine) === -1) {
+					cuisines.push({
+						name: cuisine,
+						selected: ko.observable(true),
+						resturants: 1
+					});
+				}
+			});
 		},
 		// Update curent location
 		updateLocation = function(center, proximity){
@@ -296,8 +406,17 @@ var NeighborhoodMapViewModel = function() {
 		map.setCenter(center);
 	});
 
+	// Detect when the map changes center
+	google.maps.event.addDomListener(map, "center_changed", function(){
+		setTimeout(function(){
+			if(self.location.center() != map.getCenter()) {
+				self.location.centered(false);
+			}
+		}, 900);
+	});
+
 	// Initilize the map.
-	geocoder.geocode({ address: 'NY, United States' }, function(results, status){
+	geocoder.geocode({ address: self.location.address() }, function(results, status){
 		if (status == 'OK') {
 			map.fitBoundsWithPan(results[0].geometry.viewport, 0, function() {
 				updateLocation(map.getCenter(), calculateProximity());

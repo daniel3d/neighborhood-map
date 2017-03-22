@@ -16,7 +16,7 @@
 <body>
 
 	<!-- Credits -->
-	<a href="#" class="credits">Powered By Zomato</a> 
+	<a href="https://www.zomato.com/uk" class="credits" data-bind="css:{'hide': panelVisible()}">Powered By Zomato</a> 
 
 	<!-- Google map -->
 	<main id="map-canvas"></main>
@@ -34,11 +34,17 @@
 
 		<!-- Search bar -->
 		<section class="panel-search">
-			<input id="location-search" type="text" placeholder="Enter a location">
+			<input id="location-search" type="text" placeholder="Enter a location" data-bind="value: location.address">
+			<span id="center-map" data-bind="click: reCenterMap, css: {active: !location.centered()}" title="Center the map">
+				<i class="material-icons md-24">location_on</i>
+			</span>
 			<div class="filter open" title="Filter Cuisines" data-bind="visible: cuisines().length, css:{'open': filterVisible()}">
 				<div class="filter-title">
-					<button class="filter-clear" data-bind="click: toogleFilter">
-						Clear
+					<button class="filter-clear-all" data-bind="click: filterSelectToggleAll, visible: filterAllSelected()">
+						Clear All
+					</button>
+					<button class="filter-select-all" data-bind="click: filterSelectToggleAll, visible: !filterAllSelected()">
+						Select All
 					</button>
 					<button class="filter-open" data-bind="click: toogleFilter">
 						<i class="material-icons md-36" data-badge="1">tune</i>
@@ -46,12 +52,13 @@
 				</div>
 				
 				<div class="filter-items" data-bind="foreach: cuisines">
-					<div class="filter-item">
+					<div class="filter-item" data-bind="click: $parent.filterSelectToggle">
 						<div class="toggle">
-							<input type="checkbox" id="toggle2" data-bind="attr: { id: 'toggle_filter' + $index() }"/>
-							<label data-bind="attr: { for: 'toggle_filter' + $index() }"></label>
+							<input type="checkbox" id="toggle2" data-bind="attr: { id: 'tf' + $index(), checked: selected }"/>
+							<label data-bind="attr: { for: 'tf' + $index() }"></label>
 						</div>
-						<span data-bind="text: $data"></span>
+						<span class="filter-name" data-bind="text: name"></span>
+						<span class="filter-count" data-bind="text: resturants"></span>
 					</div>
 				</div>
 			</div>
@@ -68,7 +75,7 @@
 
 		<!-- List of resturants -->
 		<section class="panel-items" data-bind="foreach: restaurants">
-			<article class="panel-item" data-bind="click: $parent.openMarkerInfo, attr: { id: 'restaurant_' + restaurant.id }, css: {active: $parent.curentRestaurant() && $parent.curentRestaurant().id == restaurant.id }">
+			<article class="panel-item" data-bind="click: $parent.openMarkerInfo, attr: { id: 'restaurant_' + restaurant.id }, css: {active: $parent.curentRestaurant() && $parent.curentRestaurant().id == restaurant.id }, visible: visible">
 				<div class="panel-item-image" data-bind="style: {'backgroundImage': 'url('+ restaurant.thumb +')'}"></div>
 				<div class="panel-item-content">
 					<header>

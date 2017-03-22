@@ -120,7 +120,7 @@ p {
     z-index: 200;
     height: 50px;
     right: 15px;
-    top: 9px;
+    top: 7px;
     border: none;
     background: none;
     position: absolute;
@@ -278,7 +278,7 @@ p {
         padding 1ms linear;
 }
 
-.filter-open, .filter-clear {
+.filter-open, .filter-clear-all, .filter-select-all {
     padding: 0px;
     margin: 15px;
     cursor: pointer;
@@ -290,10 +290,10 @@ p {
     color: #868686;
 }
 
-.filter-clear {
-    font-size: 20px;
-    padding: 10px 14px;
-    margin: 10px 10px;
+.filter-clear-all, .filter-select-all {
+    font-size: 17px;
+    padding: 10px 15px;
+    margin: 12px 10px;
     text-transform: uppercase;
     font-family: 'Roboto Condensed', sans-serif;
 }
@@ -302,16 +302,16 @@ p {
     color: #000;
 }
 
-.filter-clear {
+.filter-clear-all, .filter-select-all {
     left: 0px;
 }
 
-.filter-clear:hover  {
+.filter-clear-all:hover, .filter-select-all:hover  {
     color: #fff;
     background: #8f214c;
 }
 
-.filter.open .filter-open, .filter-clear {
+.filter.open .filter-open, .filter-clear-all, .filter-select-all {
     top: 65px;
     color: #fff;
 }
@@ -324,8 +324,8 @@ p {
 
 
 .filter-title {
-    flex: 0 0 130px;
-    height: 130px;
+    flex: 0 0 131px;
+    height: 131px;
 }
 
 
@@ -345,12 +345,18 @@ p {
 .filter-item {
     display: flex;
     flex-flow: row wrap;
-    font-size: 25px;
+    font-size: 24px;
     border-bottom: 1px solid #c2185b;
-    margin-top: 10px;
+    padding-top: 10px;
     padding-bottom: 10px;
     align-items: center;
     line-height: 12px;
+    position: relative;
+    cursor: pointer;
+}
+
+.filter-item:hover {
+    background: #8c1846;
 }
 
 .filter-item .toggle {
@@ -367,9 +373,29 @@ p {
     background-color: #c2185b !important;
 }
 
+.filter-name {
+    padding-left: 47px;
+}
+
+.filter-count {
+    font-size: 15px;
+    background: #c2185b;
+    position: absolute;
+    left: 100px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+}
+
+
+
+
+
 .panel .mdl-progress {
     min-height: 5px;
     width: 100%;
+    z-index: 999;
 }
 
 .panel-status {
@@ -389,8 +415,25 @@ p {
     border-color: #c2185b;
 }
 
-#add-marker-button {
-    float: left;
+#center-map {
+    position: absolute;
+    right: 63px;
+    top: 76px;
+    color: #868686;
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: opacity 300ms linear;
+    opacity: 0;
+    visibility: hidden;
+}
+
+#center-map:hover {
+    color: #000;
+}
+
+#center-map.active {
+    opacity: 1;
+    visibility: visible;    
 }
 
 .panel-items {
@@ -498,7 +541,7 @@ p {
         height: auto;
     }
     .panel.hide .panel-search,
-    .panel.hide .panel-items {
+    .panel.hide .panel-items, .credits.hide {
         display: none;
     }
 }
