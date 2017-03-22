@@ -1,6 +1,7 @@
 {
  "manifest_version": 2,
- "name": "Restaurants",
+ "name": "Zomato Restaurants",
+ "short_name": "Restaurants",
  "version": "1.0.0",
  "description": "App created for Udacity Full Stack Web Developer Nanodegree",
  "icons": [
@@ -41,5 +42,9 @@
    "density": "4.0"
   }
  ],
- "display": "standalone"
+ "start_url": "/",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#c2185b"
 }
