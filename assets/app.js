@@ -55,6 +55,8 @@ var NeighborhoodMapViewModel = function() {
 		self.location.centered(true);
 		map.setCenter(self.location.center());
 		map.setZoom(self.location.zoom());
+		// make sure we hide the ui pannel on mobile...
+		if (self.panelVisible()) { self.tooglePanel(); }
 	}
 	// Filter select by item
 	self.filterSelectToggle = function(cusine){
