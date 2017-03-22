@@ -42,8 +42,8 @@
    "density": "4.0"
   }
  ],
- "start_url": "/",
- "scope": "/",
+ "start_url": "/neighborhood-map/",
+ "scope": "/neighborhood-map/",
  "display": "standalone",
  "background_color": "#ffffff",
  "theme_color": "#c2185b"
