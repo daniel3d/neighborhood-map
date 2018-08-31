@@ -1,4 +1,4 @@
-### ( Neighborhood Map ) - [live demo](https://daniel3d.github.io/neighborhood-map/)
+### ( Neighborhood Map ) - [live demo](https://yovchev.github.io/neighborhood-map/)
 
 ## For Udacity Full Stack Web Developer Nanodegree
 
